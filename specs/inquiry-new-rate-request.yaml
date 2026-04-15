@@ -1,0 +1,249 @@
+openapi: 3.0.3
+info:
+  title: New Rate Request API
+  version: 1.0.0
+  description: >
+    Input API into Freightoscope for submitting new rate requests.
+
+servers:
+  - url: https://fms-test-api.azurewebsites.net
+    description: Test environment
+  - url: https://api-live.freightoscope.com
+    description: Live environment
+
+tags:
+  - name: Inquiry API
+    description: New rate request input endpoint
+
+paths:
+  /InquiryIntegration/RFQPost:
+    post:
+      tags:
+        - Inquiry API
+      summary: Submit new rate request
+      operationId: createRfqInquiry
+      description: >
+        Creates a Freightoscope inquiry from an RFQ-style payload.
+        This is the input flow into Freightoscope.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfqInquiryRequest'
+            examples:
+              default:
+                value:
+                  Mode: SEA
+                  Type: LCL
+                  GoodsDescription: MEDICINES
+                  IncoTerm: EXW
+                  MovementType: DoorDoor
+                  PickupAddress: New York
+                  DeliveryAddress: Istanbul
+                  POL: USSAV
+                  POD: VNHAN
+                  CargoDate:
+                    year: 2026
+                    month: 4
+                    day: 20
+                  Pcs: 5
+                  GrossWeight: 175
+                  GrossWeightUnit: KGS
+                  Volume: 0.5
+                  VolumeUnit: CBM
+                  ChargeableWeight: 175
+                  Pallets:
+                    - Pcs: "2"
+                      Length: "10"
+                      Width: "8"
+                      Height: "6"
+                      Unit: CMS
+                    - Pcs: "3"
+                      Length: "10"
+                      Width: "8"
+                      Height: "8"
+                      Unit: CMS
+                  Remark: SHORTEST TRANSIT TIME REQUIRED
+                  CustomerCode: CUSFRO
+      responses:
+        '200':
+          description: Rate request accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericSuccess'
+              examples:
+                default:
+                  value:
+                    Message: Inquiry posted successfully
+                    Code: 200
+        '400':
+          description: Invalid payload or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use the Freightoscope-provided username and password for this integration.
+  schemas:
+    CargoDate:
+      type: object
+      required:
+        - year
+        - month
+        - day
+      properties:
+        year:
+          type: integer
+          example: 2026
+        month:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 4
+        day:
+          type: integer
+          minimum: 1
+          maximum: 31
+          example: 20
+    Pallet:
+      type: object
+      properties:
+        Pcs:
+          type: string
+          example: "2"
+        Length:
+          type: string
+          example: "10"
+        Width:
+          type: string
+          example: "8"
+        Height:
+          type: string
+          example: "6"
+        Unit:
+          type: string
+          example: CMS
+    RfqInquiryRequest:
+      type: object
+      required:
+        - Mode
+        - Type
+        - POL
+        - POD
+      properties:
+        Mode:
+          type: string
+          description: Transport mode
+          enum:
+            - AIR
+            - SEA
+            - LAND
+        Type:
+          type: string
+          description: Shipment type
+          enum:
+            - FCL
+            - LCL
+            - FTL
+            - LTL
+        GoodsDescription:
+          type: string
+        IncoTerm:
+          type: string
+          enum:
+            - CFR
+            - CIF
+            - CIP
+            - CPT
+            - DAP
+            - DDP
+            - DPU
+            - EXW
+            - FCA
+            - FAS
+            - FOB
+        MovementType:
+          type: string
+          enum:
+            - DoorDoor
+            - DoorPort
+            - PortDoor
+            - PortPort
+        PickupAddress:
+          type: string
+        DeliveryAddress:
+          type: string
+        POL:
+          type: string
+          description: IATA airport code or UNLOC port code
+          example: USSAV
+        POD:
+          type: string
+          description: IATA airport code or UNLOC port code
+          example: VNHAN
+        CargoDate:
+          $ref: '#/components/schemas/CargoDate'
+        Pcs:
+          type: integer
+          example: 5
+        GrossWeight:
+          type: number
+          format: double
+          example: 175
+        GrossWeightUnit:
+          type: string
+          example: KGS
+        Volume:
+          type: number
+          format: double
+          example: 0.5
+        VolumeUnit:
+          type: string
+          example: CBM
+        ChargeableWeight:
+          type: number
+          format: double
+          example: 175
+        Pallets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pallet'
+        Remark:
+          type: string
+        CustomerCode:
+          type: string
+          description: Freightoscope customer code
+          example: CUSFRO
+    GenericSuccess:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Inquiry posted successfully
+        Code:
+          type: integer
+          example: 200
+    GenericError:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Validation failed
+        Code:
+          type: integer
+          example: 400

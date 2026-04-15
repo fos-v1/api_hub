@@ -1,0 +1,1113 @@
+openapi: 3.0.3
+info:
+  title: Freightoscope Shipment API
+  version: 1.0.0
+  description: >
+    Freightoscope shipment endpoints grouped into one specification.
+    This module covers GET and POST APIs for Air, Sea, and Inland shipments.
+
+servers:
+  - url: https://fms-test-api.azurewebsites.net
+    description: Test environment
+  - url: https://fms-live-api.azurewebsites.net
+    description: Live environment
+
+tags:
+  - name: Air Shipment
+    description: Air shipment retrieval and creation APIs
+  - name: Sea Shipment
+    description: Sea shipment retrieval and creation APIs
+  - name: Inland Shipment
+    description: Inland shipment retrieval and creation APIs
+
+paths:
+  /get/air/Shipment/:
+    get:
+      tags:
+        - Air Shipment
+      summary: Get air shipments
+      operationId: getAirShipments
+      description: Returns Freightoscope air shipment records.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Air shipment records returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AirShipment'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /post/air/Shipment/:
+    post:
+      tags:
+        - Air Shipment
+      summary: Create air shipment
+      operationId: createAirShipment
+      description: Creates a new Freightoscope air shipment.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AirShipment'
+      responses:
+        '200':
+          description: Air shipment accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                default:
+                  value:
+                    Message: Air shipment posted successfully
+                    Code: 200
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /get/sea/Shipment/:
+    get:
+      tags:
+        - Sea Shipment
+      summary: Get sea shipments
+      operationId: getSeaShipments
+      description: Returns Freightoscope sea shipment records.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Sea shipment records returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeaShipment'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /post/sea/Shipment/:
+    post:
+      tags:
+        - Sea Shipment
+      summary: Create sea shipment
+      operationId: createSeaShipment
+      description: Creates a new Freightoscope sea shipment.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeaShipment'
+      responses:
+        '200':
+          description: Sea shipment accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                default:
+                  value:
+                    Message: Sea shipment posted successfully
+                    Code: 200
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /get/inland/Shipment/:
+    get:
+      tags:
+        - Inland Shipment
+      summary: Get inland shipments
+      operationId: getInlandShipments
+      description: Returns Freightoscope inland shipment records.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Inland shipment records returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InlandShipment'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /post/inland/Shipment/:
+    post:
+      tags:
+        - Inland Shipment
+      summary: Create inland shipment
+      operationId: createInlandShipment
+      description: Creates a new Freightoscope inland shipment.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InlandShipment'
+      responses:
+        '200':
+          description: Inland shipment accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                default:
+                  value:
+                    Message: Inland shipment posted successfully
+                    Code: 200
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use the Freightoscope-provided username and password for this integration.
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Shipment posted successfully
+        Code:
+          type: integer
+          example: 200
+    ErrorResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Validation failed
+        Code:
+          type: integer
+          example: 400
+    CodeName:
+      type: object
+      properties:
+        Code:
+          type: string
+          nullable: true
+          example: 6E
+        Name:
+          type: string
+          nullable: true
+          example: Indigo
+    Address:
+      type: object
+      properties:
+        Address1:
+          type: string
+          nullable: true
+        Address2:
+          type: string
+          nullable: true
+        Address3:
+          type: string
+          nullable: true
+        City:
+          type: string
+          nullable: true
+        State:
+          type: string
+          nullable: true
+        Country:
+          type: string
+          nullable: true
+        ZipCode:
+          type: string
+          nullable: true
+        Phone:
+          type: string
+          nullable: true
+        Email:
+          type: string
+          nullable: true
+    Party:
+      type: object
+      properties:
+        Name:
+          type: string
+        PartyType:
+          type: string
+          example: Consignee
+        Address1:
+          type: string
+          nullable: true
+        Address2:
+          type: string
+          nullable: true
+        Address3:
+          type: string
+          nullable: true
+        City:
+          type: string
+          nullable: true
+        Country:
+          type: string
+          nullable: true
+        Zipcode:
+          type: string
+          nullable: true
+        State:
+          type: string
+          nullable: true
+        Phone:
+          type: string
+          nullable: true
+        Email:
+          type: string
+          nullable: true
+    Parties:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/Party'
+    ShipmentGeneral:
+      type: object
+      properties:
+        ShipmentMode:
+          type: string
+          example: Air
+        ShipmentDirection:
+          type: string
+          example: Export
+        ShipmentType:
+          type: string
+          example: Branch
+        ReferenceNumber:
+          type: string
+          nullable: true
+        IsDomestic:
+          type: boolean
+        ShipmentNumber:
+          type: string
+          example: SHPT2267
+        AWB_Type:
+          type: string
+          nullable: true
+          example: Master
+        ShipmentDate:
+          type: string
+          example: 19/01/2026
+        DeliveryDate:
+          type: string
+          example: 19/01/2026
+        Carrier:
+          $ref: '#/components/schemas/CodeName'
+        MAWB:
+          type: string
+          nullable: true
+        BL:
+          type: string
+          nullable: true
+        CMRNo:
+          type: string
+          nullable: true
+        ShipmentModeType:
+          type: string
+          nullable: true
+          example: FCL
+        ServiceType:
+          type: string
+          nullable: true
+        JobType:
+          type: string
+          nullable: true
+        JobNumber:
+          type: string
+          nullable: true
+    Flight:
+      type: object
+      properties:
+        FromAirport:
+          type: string
+          example: BOM
+        ToAirport:
+          type: string
+          example: BKK
+        Carrier:
+          $ref: '#/components/schemas/CodeName'
+        FlightNo:
+          type: string
+          example: 6E1059
+        ETD:
+          type: string
+          example: 21/01/2026 00:07:00
+        ETA:
+          type: string
+          example: 21/01/2026 00:11:00
+        ActualDepartureDate:
+          type: string
+          nullable: true
+        ActualArrivalDate:
+          type: string
+          nullable: true
+    Voyage:
+      type: object
+      properties:
+        VoyageNo:
+          type: string
+          example: 1369-027W
+        Carrier:
+          $ref: '#/components/schemas/CodeName'
+        DeparturePort:
+          type: string
+          example: INNSA
+        ArrivalPort:
+          type: string
+          example: AEDXB
+        VesselName:
+          type: string
+          nullable: true
+        VesselFlag:
+          type: string
+          nullable: true
+        IMO:
+          type: string
+          nullable: true
+        LloydsNumber:
+          type: string
+          nullable: true
+        ETD:
+          type: string
+          nullable: true
+        ETA:
+          type: string
+          nullable: true
+        ActualDepartureDate:
+          type: string
+          nullable: true
+        ActualArrivalDate:
+          type: string
+          nullable: true
+    Carriage:
+      type: object
+      properties:
+        TruckNumber:
+          type: string
+          nullable: true
+        Transporter:
+          $ref: '#/components/schemas/CodeName'
+        DeparturePort:
+          type: string
+          nullable: true
+        ArrivalPort:
+          type: string
+          nullable: true
+        IMO:
+          type: string
+          nullable: true
+        LloydsNumber:
+          type: string
+          nullable: true
+        ETD:
+          type: string
+          nullable: true
+        ETA:
+          type: string
+          nullable: true
+        ActualDepartureDate:
+          type: string
+          nullable: true
+        ActualArrivalDate:
+          type: string
+          nullable: true
+    Routing:
+      type: object
+      properties:
+        MovementType:
+          type: string
+          nullable: true
+          example: Door to Door
+        IncoTerm:
+          type: string
+          nullable: true
+          example: EXW
+        PickupAddress:
+          type: string
+          nullable: true
+        PlaceOfReceipt:
+          type: string
+          nullable: true
+        PlaceOfDelivery:
+          type: string
+          nullable: true
+        FinalDestination:
+          type: string
+          nullable: true
+        DeliveryAddress:
+          type: string
+          nullable: true
+        TransitTimeString:
+          type: string
+          nullable: true
+        ServiceTerm:
+          type: string
+          nullable: true
+        Flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flight'
+        Voyages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Voyage'
+        Carriages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Carriage'
+    Container:
+      type: object
+      properties:
+        ContainerNo:
+          type: string
+          nullable: true
+        ContainerSize:
+          type: string
+          nullable: true
+        CarrierSeal:
+          type: string
+          nullable: true
+        CustomSeal:
+          type: string
+          nullable: true
+        ShipperOwned:
+          type: boolean
+        EmptyPickupType:
+          type: integer
+          nullable: true
+        EmptyPickupPort:
+          type: string
+          nullable: true
+        EmptyPickupTerminal:
+          type: string
+          nullable: true
+        EmptyPickupInstruction:
+          type: string
+          nullable: true
+    ContainerDetails:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/Container'
+    TruckDetail:
+      type: object
+      properties:
+        Transporter:
+          $ref: '#/components/schemas/CodeName'
+        TruckNo:
+          type: string
+          nullable: true
+        Driver:
+          type: string
+          nullable: true
+        ContactNo:
+          type: string
+          nullable: true
+        LicenseNo:
+          type: string
+          nullable: true
+    TruckDetails:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/TruckDetail'
+    Dimension:
+      type: object
+      properties:
+        UOM:
+          type: string
+          nullable: true
+        Pcs:
+          oneOf:
+            - type: integer
+            - type: string
+        Length:
+          oneOf:
+            - type: number
+            - type: string
+        Width:
+          oneOf:
+            - type: number
+            - type: string
+        Height:
+          oneOf:
+            - type: number
+            - type: string
+        WeightOfOnePiece:
+          oneOf:
+            - type: number
+            - type: string
+    GoodsItem:
+      type: object
+      properties:
+        ContainerNo:
+          type: string
+          nullable: true
+        Pcs:
+          type: integer
+        PackageType:
+          type: string
+        CommodityType:
+          type: string
+          nullable: true
+        RateClass:
+          type: string
+          nullable: true
+        GrossWeight:
+          type: number
+          format: double
+        GrossWeightUOM:
+          type: string
+        ChargeableWeight:
+          type: number
+          format: double
+          nullable: true
+        ChargeableWeightUOM:
+          type: string
+          nullable: true
+        Volume:
+          type: number
+          format: double
+          nullable: true
+        VolumeUOM:
+          type: string
+          nullable: true
+        SLAC:
+          nullable: true
+          oneOf:
+            - type: integer
+            - type: string
+        CommodityItemNumber:
+          type: string
+          nullable: true
+        Commodity:
+          type: string
+          nullable: true
+        TruckNumber:
+          type: string
+          nullable: true
+        HSCodes:
+          type: array
+          items:
+            oneOf:
+              - type: integer
+              - type: string
+        DimensionsWeightUOM:
+          type: string
+          nullable: true
+        DimensionsUOM:
+          type: string
+          nullable: true
+        Dimensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dimension'
+        MarksAndNumbers:
+          type: string
+          nullable: true
+        GoodsDescription:
+          type: string
+          nullable: true
+    Goods:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoodsItem'
+    MeasuredValue:
+      type: object
+      properties:
+        Value:
+          type: number
+          format: double
+        Unit:
+          type: string
+          example: KGS
+    WeightPerPiece:
+      type: object
+      properties:
+        Value:
+          type: number
+          format: double
+        Unit:
+          type: string
+    LoadDimension:
+      type: object
+      properties:
+        Pcs:
+          type: integer
+        Length:
+          type: number
+          format: double
+        Width:
+          type: number
+          format: double
+        Height:
+          type: number
+          format: double
+        Unit:
+          type: string
+        WeightPerPiece:
+          $ref: '#/components/schemas/WeightPerPiece'
+    Load:
+      type: object
+      properties:
+        PackageType:
+          type: string
+        Quantity:
+          type: integer
+        ContainerNumber:
+          type: string
+          nullable: true
+        GrossWeight:
+          $ref: '#/components/schemas/MeasuredValue'
+        Volume:
+          $ref: '#/components/schemas/MeasuredValue'
+        VolumetricWeight:
+          type: number
+          format: double
+          nullable: true
+        Commodity:
+          type: string
+          nullable: true
+        MarksAndNumbers:
+          type: string
+          nullable: true
+        GoodsDescription:
+          type: string
+          nullable: true
+        HsCodes:
+          type: array
+          items:
+            type: string
+        Dimensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoadDimension'
+    GoodsDetails:
+      type: object
+      properties:
+        Loads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Load'
+    OrderLocation:
+      type: object
+      properties:
+        Type:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true
+        Code:
+          type: string
+          nullable: true
+        Address:
+          $ref: '#/components/schemas/Address'
+    TransporterWithAddress:
+      type: object
+      properties:
+        Type:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true
+        Code:
+          type: string
+          nullable: true
+        Address:
+          $ref: '#/components/schemas/Address'
+    EmptyPickupDetails:
+      type: object
+      properties:
+        Type:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true
+        Reference:
+          type: string
+          nullable: true
+      additionalProperties: true
+    OrderTransportDetails:
+      type: object
+      properties:
+        Type:
+          type: string
+          nullable: true
+        Number:
+          type: string
+          nullable: true
+        TrailerNumber:
+          type: string
+          nullable: true
+        DriverName:
+          type: string
+          nullable: true
+        EmptyPickupDetails:
+          $ref: '#/components/schemas/EmptyPickupDetails'
+        EstimatedPickupDate:
+          type: string
+          nullable: true
+        EstimatedDeliveryDate:
+          type: string
+          nullable: true
+        ActualPickupDate:
+          type: string
+          nullable: true
+        ActualDeliveryDate:
+          type: string
+          nullable: true
+        Notes:
+          type: string
+          nullable: true
+    OrderCore:
+      type: object
+      properties:
+        From:
+          $ref: '#/components/schemas/OrderLocation'
+        To:
+          $ref: '#/components/schemas/OrderLocation'
+        Transporter:
+          $ref: '#/components/schemas/TransporterWithAddress'
+    OrderDetail:
+      type: object
+      properties:
+        OrderNumber:
+          type: string
+        OrderType:
+          type: string
+          example: PickupOrder
+        OrderDetails:
+          $ref: '#/components/schemas/OrderCore'
+        TransportDetails:
+          $ref: '#/components/schemas/OrderTransportDetails'
+        GoodsDetails:
+          $ref: '#/components/schemas/GoodsDetails'
+    ChargeCode:
+      type: object
+      properties:
+        Code:
+          type: string
+        Description:
+          type: string
+    ChargeLine:
+      type: object
+      properties:
+        ChargeDetails:
+          $ref: '#/components/schemas/ChargeCode'
+        Terms:
+          type: string
+          nullable: true
+        AsAgreed:
+          type: boolean
+          nullable: true
+        Currency:
+          type: string
+          nullable: true
+        ChargeBasis:
+          type: string
+          nullable: true
+        Quantity:
+          type: number
+          format: double
+          nullable: true
+        Rate:
+          type: number
+          format: double
+          nullable: true
+        Total:
+          type: number
+          format: double
+          nullable: true
+        DueTo:
+          type: string
+          nullable: true
+    ChargeBucket:
+      type: object
+      properties:
+        Currency:
+          type: string
+          nullable: true
+        WeightCharge:
+          type: number
+          format: double
+          nullable: true
+        ValuationCharge:
+          type: number
+          format: double
+          nullable: true
+        Tax:
+          type: number
+          format: double
+          nullable: true
+        TotalOtherDueAgent:
+          type: number
+          format: double
+          nullable: true
+        TotalOtherDueCarrier:
+          type: number
+          format: double
+          nullable: true
+        Total:
+          type: number
+          format: double
+          nullable: true
+    AirChargeDeclaration:
+      type: object
+      properties:
+        Currency:
+          type: string
+          nullable: true
+        ChargeCode:
+          $ref: '#/components/schemas/ChargeCode'
+        DeclaredValueForCustoms:
+          type: number
+          format: double
+          nullable: true
+        DeclaredValueForCustomsNCV:
+          type: boolean
+          nullable: true
+        DeclaredValueForCarriage:
+          type: number
+          format: double
+          nullable: true
+        DeclaredValueForCarriageNVD:
+          type: boolean
+          nullable: true
+        AmountOfInsurance:
+          type: number
+          format: double
+          nullable: true
+        AmountOfInsuranceNIL:
+          type: boolean
+          nullable: true
+    ChargesAir:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeLine'
+        ChargeDeclaration:
+          $ref: '#/components/schemas/AirChargeDeclaration'
+        ChargeSummary:
+          type: object
+          properties:
+            Prepaid:
+              $ref: '#/components/schemas/ChargeBucket'
+            Collect:
+              $ref: '#/components/schemas/ChargeBucket'
+    ChargesGeneric:
+      type: object
+      properties:
+        List:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeLine'
+        Declaration:
+          type: object
+          additionalProperties: true
+        Summary:
+          type: object
+          additionalProperties: true
+    Handling:
+      type: object
+      properties:
+        SCI:
+          type: string
+          nullable: true
+        SpecialHandlingCode:
+          type: array
+          items:
+            type: string
+        HandlingInformation:
+          type: string
+          nullable: true
+        OtherServiceInformation:
+          type: string
+          nullable: true
+        OptionalShippingInformation:
+          type: string
+          nullable: true
+    MoreDetails:
+      type: object
+      additionalProperties: true
+      description: Air shipment specific extended details block as supplied by Freightoscope.
+    Execution:
+      type: object
+      properties:
+        ShippersSignature:
+          type: string
+          nullable: true
+        CarriersSignature:
+          type: string
+          nullable: true
+        ExecutionDate:
+          type: string
+          nullable: true
+          example: 2026-01-27
+        Place:
+          type: string
+          nullable: true
+        NoOfOriginals:
+          nullable: true
+          oneOf:
+            - type: integer
+            - type: string
+        Remarks:
+          type: string
+          nullable: true
+    AirShipment:
+      type: object
+      properties:
+        General:
+          allOf:
+            - $ref: '#/components/schemas/ShipmentGeneral'
+            - type: object
+              properties:
+                ShipmentMode:
+                  type: string
+                  example: Air
+        Parties:
+          $ref: '#/components/schemas/Parties'
+        Routing:
+          $ref: '#/components/schemas/Routing'
+        Goods:
+          $ref: '#/components/schemas/Goods'
+        OrderDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDetail'
+        Charges:
+          $ref: '#/components/schemas/ChargesAir'
+        Handling:
+          $ref: '#/components/schemas/Handling'
+        MoreDetails:
+          $ref: '#/components/schemas/MoreDetails'
+        Execution:
+          $ref: '#/components/schemas/Execution'
+    SeaShipment:
+      type: object
+      properties:
+        General:
+          allOf:
+            - $ref: '#/components/schemas/ShipmentGeneral'
+            - type: object
+              properties:
+                ShipmentMode:
+                  type: string
+                  example: Sea
+        Parties:
+          $ref: '#/components/schemas/Parties'
+        Routing:
+          $ref: '#/components/schemas/Routing'
+        ContainerDetails:
+          $ref: '#/components/schemas/ContainerDetails'
+        Goods:
+          $ref: '#/components/schemas/Goods'
+        OrderDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDetail'
+        Charges:
+          $ref: '#/components/schemas/ChargesGeneric'
+        Execution:
+          $ref: '#/components/schemas/Execution'
+    InlandShipment:
+      type: object
+      properties:
+        General:
+          allOf:
+            - $ref: '#/components/schemas/ShipmentGeneral'
+            - type: object
+              properties:
+                ShipmentMode:
+                  type: string
+                  example: Inland
+        Parties:
+          $ref: '#/components/schemas/Parties'
+        ContainerDetails:
+          $ref: '#/components/schemas/ContainerDetails'
+        TruckDetails:
+          $ref: '#/components/schemas/TruckDetails'
+        Routing:
+          $ref: '#/components/schemas/Routing'
+        Goods:
+          $ref: '#/components/schemas/Goods'
+        OrderDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDetail'
+        Charges:
+          $ref: '#/components/schemas/ChargesGeneric'
+        Handling:
+          $ref: '#/components/schemas/Handling'
+        Execution:
+          $ref: '#/components/schemas/Execution'

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Freightoscope Swagger Portal</title>
+    <meta
+      name="description"
+      content="Swagger UI portal for Freightoscope and FOS Connect APIs."
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg:
+          radial-gradient(circle at top left, rgba(2, 132, 199, 0.18), transparent 24%),
+          radial-gradient(circle at bottom right, rgba(234, 88, 12, 0.16), transparent 24%),
+          linear-gradient(180deg, #eff6ff 0%, #f8fafc 48%, #ffffff 100%);
+        --panel: rgba(255, 255, 255, 0.86);
+        --panel-strong: rgba(255, 255, 255, 0.95);
+        --border: rgba(148, 163, 184, 0.24);
+        --text: #0f172a;
+        --muted: #475569;
+        --brand: #0f766e;
+        --accent: #c2410c;
+        --shadow: 0 24px 70px rgba(15, 23, 42, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      .page {
+        width: min(1440px, calc(100vw - 32px));
+        margin: 24px auto;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 24px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.88));
+      }
+
+      .sidebar-inner {
+        padding: 26px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.1);
+        color: var(--brand);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(34px, 4.4vw, 54px);
+        line-height: 0.96;
+        letter-spacing: -0.03em;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .lead {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .meta {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .meta-item {
+        padding: 14px 16px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .meta-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 18px;
+      }
+
+      .meta-item p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .api-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .api-button {
+        width: 100%;
+        padding: 16px;
+        text-align: left;
+        border-radius: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(255, 255, 255, 0.84);
+        color: var(--text);
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .api-button:hover,
+      .api-button:focus-visible {
+        transform: translateY(-1px);
+        border-color: rgba(15, 118, 110, 0.45);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+        outline: none;
+      }
+
+      .api-button.active {
+        border-color: rgba(15, 118, 110, 0.5);
+        background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 0.94));
+      }
+
+      .api-button small {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--brand);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .api-button strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 17px;
+      }
+
+      .api-button span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .content {
+        overflow: hidden;
+        background: var(--panel-strong);
+      }
+
+      .content-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .content-title {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .content-subtitle {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .badge {
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(2, 132, 199, 0.18);
+        background: rgba(2, 132, 199, 0.08);
+        color: #0369a1;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      #swagger-ui {
+        min-height: 78vh;
+      }
+
+      .swagger-ui .topbar {
+        display: none;
+      }
+
+      @media (max-width: 1024px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page {
+          width: min(100vw - 16px, 1440px);
+          margin: 8px auto;
+        }
+
+        .panel {
+          border-radius: 20px;
+        }
+
+        .sidebar-inner {
+          padding: 20px;
+        }
+
+        .content-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="shell">
+        <aside class="panel sidebar">
+          <div class="sidebar-inner">
+            <div class="eyebrow">Swagger Portal</div>
+            <h1>Freightoscope API Hub</h1>
+            <p class="lead">
+              A single Swagger UI entrypoint for Shipment, Inquiry, FOS Connect,
+              Quotation, and Customer Booking APIs. Each module is maintained as
+              its own OpenAPI file so it can grow without turning into one
+              massive spec.
+            </p>
+
+            <div id="api-list" class="api-list"></div>
+          </div>
+        </aside>
+
+        <section class="panel content">
+          <div class="content-header">
+            <div>
+              <div id="content-title" class="content-title">Inquiry API</div>
+              <div id="content-subtitle" class="content-subtitle">
+                New rate request input and email AI processing output endpoints.
+              </div>
+            </div>
+            <div id="content-badge" class="badge">OpenAPI 3.0.3</div>
+          </div>
+          <div id="swagger-ui"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-standalone-preset.js"></script>
+    <script>
+      const specs = [
+        {
+          key: "inquiry-new-rate-request",
+          name: "Inquiry API",
+          group: "Freightoscope",
+          description: "New Rate Request API (Input into Freightoscope).",
+          url: "./specs/inquiry-new-rate-request.yaml",
+        },
+        {
+          key: "inquiry-rate-request-email-ai-processing",
+          name: "Inquiry API",
+          group: "Freightoscope",
+          description: "Rate Request Email AI processing (Output from Freightoscope).",
+          url: "./specs/inquiry-rate-request-email-ai-processing.yaml",
+        },
+        {
+          key: "quotation",
+          name: "Quotation API",
+          group: "Freightoscope",
+          description: "Quotation retrieval feed for downstream integrations.",
+          url: "./specs/quotation.yaml",
+        },
+        {
+          key: "customer-booking",
+          name: "Customer Booking API",
+          group: "Freightoscope",
+          description: "Confirmed booking feed tied to customer-confirmed quotations.",
+          url: "./specs/customer-booking.yaml",
+        },
+        {
+          key: "fos-connect",
+          name: "FOS Connect API",
+          group: "FOS Connect",
+          description: "Partner list, shipment sharing, tracking, and document APIs.",
+          url: "./specs/fos-connect.yaml",
+        },
+        {
+          key: "shipment",
+          name: "Shipment API",
+          group: "Freightoscope",
+          description: "Air, Sea, and Inland shipment GET and POST endpoints.",
+          url: "./specs/shipment.yaml",
+        },
+      ];
+
+      const titleEl = document.getElementById("content-title");
+      const subtitleEl = document.getElementById("content-subtitle");
+      const listEl = document.getElementById("api-list");
+
+      let ui;
+
+      function renderSpec(spec) {
+        titleEl.textContent = spec.name;
+        subtitleEl.textContent = spec.description;
+
+        if (ui) {
+          document.getElementById("swagger-ui").innerHTML = "";
+        }
+
+        ui = SwaggerUIBundle({
+          url: spec.url,
+          dom_id: "#swagger-ui",
+          deepLinking: true,
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          layout: "BaseLayout",
+          docExpansion: "list",
+          displayRequestDuration: true,
+          defaultModelsExpandDepth: 2,
+          tryItOutEnabled: false,
+          filter: true,
+        });
+
+        document.querySelectorAll(".api-button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.key === spec.key);
+        });
+      }
+
+      specs.forEach((spec, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "api-button" + (index === 0 ? " active" : "");
+        button.dataset.key = spec.key;
+        button.innerHTML =
+          "<small>" +
+          spec.group +
+          "</small><strong>" +
+          spec.name +
+          "</strong><span>" +
+          spec.description +
+          "</span>";
+        button.addEventListener("click", () => renderSpec(spec));
+        listEl.appendChild(button);
+      });
+
+      renderSpec(specs[0]);
+    </script>
+  </body>
+</html>

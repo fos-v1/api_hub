@@ -1,0 +1,428 @@
+openapi: 3.0.3
+info:
+  title: Freightoscope Customer Booking API
+  version: 1.0.0
+  description: >
+    Feed endpoint to retrieve customer bookings confirmed after a given timestamp.
+    The source document labels this as confirmed quotation based booking data.
+
+servers:
+  - url: https://fms-test-api.azurewebsites.net
+    description: Test environment
+  - url: https://api-live.freightoscope.com
+    description: Live environment
+
+tags:
+  - name: Customer Booking
+    description: Customer booking retrieval API
+
+paths:
+  /Shipment/GetConfirmedQuotationSince:
+    get:
+      tags:
+        - Customer Booking
+      summary: Get confirmed customer bookings since timestamp
+      operationId: getConfirmedBookingsSince
+      description: >
+        Returns confirmed bookings created or updated since the supplied timestamp.
+        Authenticate with HTTP Basic authentication.
+      security:
+        - basicAuth: []
+      parameters:
+        - in: query
+          name: since
+          required: true
+          description: Last API call timestamp in ISO 8601 format
+          schema:
+            type: string
+            format: date-time
+          example: 2026-04-01T00:00:00Z
+      responses:
+        '200':
+          description: Confirmed bookings returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use the Freightoscope-provided username and password for this integration.
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Invalid request
+        Code:
+          type: integer
+          example: 400
+    BranchReference:
+      type: object
+      properties:
+        CompanyCode:
+          type: string
+          example: VNM
+        CompanyName:
+          type: string
+          example: Palm Logistics
+        BranchCode:
+          type: string
+          example: HAN
+        BranchName:
+          type: string
+          example: Hanoi Branch
+        DepartmentCode:
+          type: string
+        DepartmentName:
+          type: string
+          example: Administration
+        CountryCode:
+          type: string
+          example: VN
+        Country:
+          type: string
+          example: Viet Nam
+        DataProvider:
+          type: string
+          example: HANTRNVNM
+        EnterpriseID:
+          type: string
+          example: LMI
+        ServerId:
+          type: string
+          example: TRN
+    Carrier:
+      type: object
+      properties:
+        AlphaCode:
+          type: string
+          nullable: true
+          example: AF
+        NumericCode:
+          type: string
+          nullable: true
+          example: "057"
+        SCACCode:
+          type: string
+          nullable: true
+          example: OOLU
+        Name:
+          type: string
+          example: Air France
+    Location:
+      type: object
+      properties:
+        Code:
+          type: string
+          example: HAN
+        Name:
+          type: string
+          example: Noi Bai Intl, Hanoi
+        Country:
+          type: string
+          example: VN
+    Party:
+      type: object
+      properties:
+        PartyCode:
+          type: string
+        TMSPartyCode:
+          type: string
+        PartyType:
+          type: string
+          example: CUSTOMER
+        Name:
+          type: string
+        Address:
+          type: string
+        City:
+          type: string
+        Country:
+          type: string
+        ZipCode:
+          type: string
+        Phone:
+          type: string
+        Email:
+          type: string
+        Website:
+          type: string
+    Weight:
+      type: object
+      properties:
+        Weight:
+          type: number
+          format: double
+          example: 600
+        Unit:
+          type: string
+          example: KGS
+    Volume:
+      type: object
+      properties:
+        Volume:
+          type: number
+          format: double
+          example: 4.5
+        Unit:
+          type: string
+          example: CBM
+    GoodsItem:
+      type: object
+      properties:
+        Commodity:
+          type: string
+        CommodityType:
+          type: string
+          nullable: true
+        NoOfPackages:
+          type: integer
+          example: 40
+        PackageType:
+          type: string
+        GrossWeight:
+          $ref: '#/components/schemas/Weight'
+        Volume:
+          $ref: '#/components/schemas/Volume'
+        ContainerNumber:
+          type: string
+        CargoValue:
+          type: number
+          format: double
+          example: 0
+        Currency:
+          type: string
+          example: VND
+    Routing:
+      type: object
+      properties:
+        FlightNumber:
+          type: string
+        AirlineCode:
+          type: string
+          example: AF
+        AirlineName:
+          type: string
+          example: Air France
+        DepartureAirport:
+          $ref: '#/components/schemas/Location'
+        ArrivalAirport:
+          $ref: '#/components/schemas/Location'
+        ETD:
+          type: string
+          format: date-time
+        ETA:
+          type: string
+          format: date-time
+    Voyage:
+      type: object
+      properties:
+        Vessel:
+          type: string
+        VoyageNumber:
+          type: string
+        CarrierSCAC:
+          type: string
+        LloydsNumber:
+          type: string
+        VesselFlag:
+          type: string
+        IMO:
+          type: string
+        DeparturePort:
+          $ref: '#/components/schemas/Location'
+        ArrivalPort:
+          $ref: '#/components/schemas/Location'
+        ETD:
+          type: string
+          format: date-time
+        ETA:
+          type: string
+          format: date-time
+    Container:
+      type: object
+      properties:
+        ContainerNumber:
+          type: string
+        ContainerSize:
+          type: string
+          example: 40HC
+        Seal:
+          type: string
+        CustomSeal:
+          type: string
+        ShipperOwned:
+          type: boolean
+          example: false
+    Charge:
+      type: object
+      properties:
+        Charge:
+          type: string
+          example: Air Freight Charge
+        ChargeCode:
+          type: string
+          example: AFT
+        TMSChargeCode:
+          type: string
+          example: OFRT
+        ChargeBasis:
+          type: string
+        Qty:
+          type: number
+          format: double
+        SellRate:
+          type: number
+          format: double
+        SellCurrency:
+          type: string
+        SellExchRate:
+          type: number
+          format: double
+        SellAmount:
+          type: number
+          format: double
+        SellAmountInBranchCurrency:
+          type: number
+          format: double
+        BuyRate:
+          type: number
+          format: double
+        BuyCurrency:
+          type: string
+        BuyExchRate:
+          type: number
+          format: double
+        BuyAmount:
+          type: number
+          format: double
+        BuyAmountInBranchCurrency:
+          type: number
+          format: double
+        ProfitInBranchCurrency:
+          type: number
+          format: double
+    ConfirmedQuotation:
+      type: object
+      properties:
+        Carrier:
+          oneOf:
+            - type: string
+            - $ref: '#/components/schemas/Carrier'
+        TransitTime:
+          type: string
+          example: 0 Day(s)
+        CommodityType:
+          type: string
+          nullable: true
+        ServiceType:
+          type: string
+          nullable: true
+        TotalSellAmountInBranchCurrency:
+          type: number
+          format: double
+        TotalBuyAmountInBranchCurrency:
+          type: number
+          format: double
+        TotalProfitInBranchCurrency:
+          type: number
+          format: double
+        BranchCurrency:
+          type: string
+        Charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+        QuotationRemarks:
+          type: string
+        Clause:
+          type: string
+    Booking:
+      type: object
+      properties:
+        Id:
+          type: integer
+          example: 11874
+        ForwardingAgent:
+          $ref: '#/components/schemas/BranchReference'
+        BookingNo:
+          type: string
+          example: "8"
+        TransportMode:
+          type: string
+          example: AIR
+        Carrier:
+          $ref: '#/components/schemas/Carrier'
+        MovementType:
+          type: string
+          example: Port To Port
+        ShipmentType:
+          type: string
+          nullable: true
+        Direction:
+          type: string
+          example: Export
+        AWBNO:
+          type: string
+          nullable: true
+        BookingReferenceNo:
+          type: string
+          nullable: true
+        INCOTerm:
+          type: string
+          example: FOB
+        PlaceOfReceipt:
+          type: string
+        PortOfLoading:
+          $ref: '#/components/schemas/Location'
+        PortOfDischarge:
+          $ref: '#/components/schemas/Location'
+        PlaceOfDelivery:
+          type: string
+        PickupAddress:
+          type: string
+        DeliveryAddress:
+          type: string
+        Parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Party'
+        Containers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Container'
+        Goods:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoodsItem'
+        Routings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Routing'
+        Voyages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Voyage'
+        Remark:
+          type: string
+        ConfirmedQuotation:
+          $ref: '#/components/schemas/ConfirmedQuotation'

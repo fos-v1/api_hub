@@ -1,0 +1,403 @@
+openapi: 3.0.3
+info:
+  title: Freightoscope Quotation API
+  version: 1.0.0
+  description: >
+    Feed endpoint to retrieve Freightoscope quotations updated since a given timestamp.
+
+servers:
+  - url: https://fms-test-api.azurewebsites.net
+    description: Test environment
+  - url: https://api-live.freightoscope.com
+    description: Live environment
+
+tags:
+  - name: Quotation
+    description: Quotation retrieval API
+
+paths:
+  /Quotation/getQuotations:
+    get:
+      tags:
+        - Quotation
+      summary: Get quotations
+      operationId: getQuotations
+      description: >
+        Returns quotations filtered by last update timestamp and one or more statuses.
+        Authenticate with HTTP Basic authentication.
+      security:
+        - basicAuth: []
+      parameters:
+        - in: query
+          name: since
+          required: true
+          description: Last API call timestamp in ISO 8601 format
+          schema:
+            type: string
+            format: date-time
+          example: 2026-04-01T00:00:00Z
+        - in: query
+          name: status
+          required: false
+          description: Comma-separated quotation statuses
+          schema:
+            type: string
+          example: Draft,Confirmed
+      responses:
+        '200':
+          description: Quotations returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quotation'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use the Freightoscope-provided username and password for this integration.
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Invalid request
+        Code:
+          type: integer
+          example: 400
+    UserReference:
+      type: object
+      properties:
+        UserId:
+          type: integer
+          example: 2345
+        Name:
+          type: string
+          example: Jane Smith
+        TMSUserId:
+          type: string
+          example: TMS-2345
+    Party:
+      type: object
+      properties:
+        PartyCode:
+          type: string
+          example: DOLLOGTPE
+        TMSPartyCode:
+          type: string
+          example: DOLLOGTPE
+        PartyType:
+          type: string
+          example: CUSTOMER
+        Name:
+          type: string
+          example: DOLPHIN LOGISTICS CO., LTD.
+        Address:
+          type: string
+        City:
+          type: string
+        Country:
+          type: string
+        ZipCode:
+          type: string
+        Phone:
+          type: string
+        Email:
+          type: string
+        Website:
+          type: string
+    Measure:
+      type: object
+      properties:
+        UOM:
+          type: string
+          example: KGS
+        Weight:
+          type: number
+          format: double
+          example: 1666
+    UnitDimension:
+      type: object
+      properties:
+        PCS:
+          type: integer
+          example: 1
+        Length:
+          type: number
+          format: double
+          example: 120
+        Width:
+          type: number
+          format: double
+          example: 100
+        Height:
+          type: number
+          format: double
+          example: 85
+        UnitWeight:
+          $ref: '#/components/schemas/Measure'
+    AirLoadDetails:
+      type: object
+      properties:
+        CalculatedBy:
+          type: string
+        ByShipmentTotal:
+          type: object
+          properties:
+            NoOfUnits:
+              type: integer
+              example: 1
+            ChargeableWeight:
+              $ref: '#/components/schemas/Measure'
+            GrossWeight:
+              $ref: '#/components/schemas/Measure'
+            Volume:
+              $ref: '#/components/schemas/Measure'
+        ByBox_Pallets:
+          type: object
+          properties:
+            UOM:
+              type: string
+              example: CMS
+            Units:
+              type: array
+              items:
+                $ref: '#/components/schemas/UnitDimension'
+    SeaContainer:
+      type: object
+      properties:
+        ContainerType:
+          type: string
+          example: 40HC
+        Qty:
+          type: integer
+          example: 1
+        GrossWeight:
+          $ref: '#/components/schemas/Measure'
+        Volume:
+          $ref: '#/components/schemas/Measure'
+    SeaLoadDetails:
+      type: object
+      properties:
+        FCL:
+          type: array
+          items:
+            $ref: '#/components/schemas/SeaContainer'
+        LCL:
+          type: object
+          properties:
+            GrossWeight:
+              $ref: '#/components/schemas/Measure'
+            Volume:
+              $ref: '#/components/schemas/Measure'
+    CargoDetails:
+      type: object
+      properties:
+        AirLoadDetails:
+          $ref: '#/components/schemas/AirLoadDetails'
+        SeaLoadDetails:
+          $ref: '#/components/schemas/SeaLoadDetails'
+    Location:
+      type: object
+      properties:
+        Code:
+          type: string
+          example: BOM
+        Name:
+          type: string
+          example: Mumbai
+    TransportationDetail:
+      type: object
+      properties:
+        MovementType:
+          type: string
+        PlaceOfReceipt:
+          type: string
+        PortOfLoading:
+          $ref: '#/components/schemas/Location'
+        PortOfDischarge:
+          $ref: '#/components/schemas/Location'
+        PlaceOfDelivery:
+          type: string
+    Carrier:
+      type: object
+      properties:
+        AlphaCode:
+          type: string
+          nullable: true
+          example: KE
+        NumericCode:
+          type: string
+          nullable: true
+          example: "180"
+        SCACCode:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          example: KOREAN AIR
+    Charge:
+      type: object
+      properties:
+        Charge:
+          type: string
+          example: Freight Charge
+        ChargeCode:
+          type: string
+          example: AFT
+        TMSChargeCode:
+          type: string
+        ChargeBasis:
+          type: string
+          example: Chargeable Weight
+        Qty:
+          type: number
+          format: double
+          example: 1666
+        SellRate:
+          type: number
+          format: double
+          example: 5
+        SellCurrency:
+          type: string
+          example: USD
+        SellExchRate:
+          type: number
+          format: double
+          example: 1
+        SellAmount:
+          type: number
+          format: double
+          example: 8330
+        SellAmountInBranchCurrency:
+          type: number
+          format: double
+          example: 8330
+        BuyRate:
+          type: number
+          format: double
+          example: 0
+        BuyCurrency:
+          type: string
+          example: USD
+        BuyExchRate:
+          type: number
+          format: double
+          example: 1
+        BuyAmount:
+          type: number
+          format: double
+          example: 0
+        BuyAmountInBranchCurrency:
+          type: number
+          format: double
+          example: 0
+        ProfitInBranchCurrency:
+          type: number
+          format: double
+          example: 8330
+    RateOption:
+      type: object
+      properties:
+        Carrier:
+          $ref: '#/components/schemas/Carrier'
+        Charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    Quotation:
+      type: object
+      properties:
+        QuotationId:
+          type: integer
+          example: 345678
+        QuotationNo:
+          type: string
+          example: QT-782312
+        QuotationStatus:
+          type: string
+          example: Draft
+        ValidFrom:
+          type: string
+          format: date-time
+        ValidTo:
+          type: string
+          format: date-time
+        TransitTime:
+          type: string
+          example: 20h 0m
+        ServiceType:
+          type: string
+          example: Standard
+        AircraftType:
+          type: string
+        CommodityType:
+          type: string
+          nullable: true
+        Commodity:
+          type: string
+        IncoTerm:
+          type: string
+          example: FOB
+        SalesPerson:
+          $ref: '#/components/schemas/UserReference'
+        Mode:
+          type: string
+          example: Air
+        Direction:
+          type: string
+          example: Export
+        ShipmentType:
+          type: string
+        TotalSellAmountInBranchCurrency:
+          type: number
+          format: double
+          example: 13395.6
+        TotalBuyAmountInBranchCurrency:
+          type: number
+          format: double
+          example: 0
+        TotalProfitInBranchCurrency:
+          type: number
+          format: double
+          example: 13395.6
+        BranchCurrency:
+          type: string
+          example: INR
+        Customer:
+          $ref: '#/components/schemas/Party'
+        CargoDetails:
+          $ref: '#/components/schemas/CargoDetails'
+        TransportationDetail:
+          $ref: '#/components/schemas/TransportationDetail'
+        RateOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RateOption'
+        QuotationRemarks:
+          type: string
+          example: "<p>Test Remarks</p>"
+        Clause:
+          type: string
+        CreatedDate:
+          type: string
+          format: date-time
+        ModifiedDate:
+          type: string
+          format: date-time
