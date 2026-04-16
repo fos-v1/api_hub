@@ -61,7 +61,8 @@
       .sidebar {
         position: sticky;
         top: 24px;
-        overflow: hidden;
+        overflow-y: auto;
+        max-height: calc(100vh - 48px);
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 246, 255, 0.88));
       }
 
@@ -343,6 +344,13 @@
           description: "Air, Sea, and Inland shipment GET and POST endpoints.",
           url: "./specs/shipment.yaml",
         },
+        {
+          key: "financial-documents",
+          name: "Financial Documents API",
+          group: "Freightoscope",
+          description: "Outbound invoice, credit note, debit note, and bill document POST APIs.",
+          url: "./specs/financial-documents.yaml",
+        },
       ];
 
       const titleEl = document.getElementById("content-title");
@@ -365,7 +373,7 @@
           deepLinking: true,
           presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
           layout: "BaseLayout",
-          docExpansion: "list",
+          docExpansion: "full",
           displayRequestDuration: true,
           defaultModelsExpandDepth: 2,
           tryItOutEnabled: false,

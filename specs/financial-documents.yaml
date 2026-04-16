@@ -1,0 +1,1194 @@
+openapi: 3.0.3
+info:
+  title: Freightoscope Financial Documents API
+  version: 1.0.0
+  description: >
+    Outbound Freightoscope financial document APIs for posting invoice,
+    credit note, debit note, and bill document data to external systems.
+
+servers:
+  - url: https://fms-test-api.azurewebsites.net
+    description: Test environment
+  - url: https://fms-live-api.azurewebsites.net
+    description: Live environment
+
+tags:
+  - name: Financial Documents
+    description: Outbound financial document posting APIs
+
+paths:
+  /post/invoice/:
+    post:
+      tags:
+        - Financial Documents
+      summary: Post invoice document data
+      operationId: postInvoiceDocument
+      description: Sends Freightoscope invoice document data to an external system.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceDocumentPayload'
+            examples:
+              invoice:
+                value:
+                  Document:
+                    DocumentType: Invoice
+                    DocumentCategory: AR
+                    DocumentId: "1552039"
+                    DocumentNumber: INV01012/2627
+                    DocumentDate: "2026-03-16"
+                    PaymentTerms:
+                      Code: IMM
+                      Description: Immediately
+                      Days: 0
+                    DueDate: "2026-03-16"
+                    PostingReferenceId: null
+                    AccountSystemId: null
+                    AccountPostingId: null
+                  Party:
+                    PartyId: "301051"
+                    PartyCode: AAK01
+                    Name: Aakash
+                    Address:
+                      Address1: B1 vidya nagar
+                      Address2: near school
+                      Address3: katemaniva
+                      City: mumbai
+                      State: Maharashtra
+                      Country: India
+                      ZipCode: "421306"
+                    Phone: null
+                    Email: null
+                    VATNumber: null
+                  Currency:
+                    DocumentCurrency: INR
+                    BranchCurrency: INR
+                    ExchangeRateBranchToDocument: 1
+                  VendorDocumentDetails: null
+                  AdjustmentDetails: null
+                  LineItems:
+                    - LineItemId: "55604"
+                      SequenceNumber: 1
+                      ShipmentType: Master
+                      JobNumber: "1"
+                      ShipmentNumber: "1"
+                      Mode: Air
+                      Direction: Export
+                      MasterNumber: 125-98754655
+                      HouseNumber: null
+                      Charge:
+                        ChargeId: "18060"
+                        ChargeCode: AFT
+                        Description: Air Freight Charge
+                      PrepaidCollect: Prepaid
+                      Quantity: 1
+                      Basis: Per Shipment
+                      Rate: 155000
+                      LineCurrency: INR
+                      AmountLineCurrency: 155000
+                      ExchangeRateLineToBranch: 1
+                      AmountBranchCurrency: 155000
+                      ExchangeRateBranchToDocument: 1
+                      AmountDocumentCurrency: 155000
+                      Tax:
+                        TaxId: "15030"
+                        TaxCode: NIL RATED
+                        Description: NIL RATED
+                        Rate: 0
+                      TaxPercent: 0
+                      TaxAmountBranchCurrency: 0
+                      TaxAmountDocumentCurrency: 0
+                      TotalAmountLineCurrency: 155000
+                      TotalAmountBranchCurrency: 155000
+                      TotalAmountDocumentCurrency: 155000
+                      BillAmount: null
+                      Difference: null
+                      BillRemarks: null
+                    - LineItemId: "50968"
+                      SequenceNumber: 2
+                      ShipmentType: Master
+                      JobNumber: "1"
+                      ShipmentNumber: "1"
+                      Mode: Air
+                      Direction: Export
+                      MasterNumber: 125-98754655
+                      HouseNumber: null
+                      Charge:
+                        ChargeId: "35409"
+                        ChargeCode: AWF
+                        Description: Air Waybill Fee
+                      PrepaidCollect: Prepaid
+                      Quantity: 1
+                      Basis: Per AWB
+                      Rate: 5500
+                      LineCurrency: INR
+                      AmountLineCurrency: 5500
+                      ExchangeRateLineToBranch: 1
+                      AmountBranchCurrency: 5500
+                      ExchangeRateBranchToDocument: 1
+                      AmountDocumentCurrency: 5500
+                      Tax:
+                        TaxId: "15030"
+                        TaxCode: NIL RATED
+                        Description: NIL RATED
+                        Rate: 0
+                      TaxPercent: 0
+                      TaxAmountBranchCurrency: 0
+                      TaxAmountDocumentCurrency: 0
+                      TotalAmountLineCurrency: 5500
+                      TotalAmountBranchCurrency: 5500
+                      TotalAmountDocumentCurrency: 5500
+                      BillAmount: null
+                      Difference: null
+                      BillRemarks: null
+                  Totals:
+                    TotalTaxableAmountDocumentCurrency: 160500
+                    TotalTaxDocumentCurrency: 0
+                    GrandTotalDocumentCurrency: 160500
+                    TotalTaxableAmountBranchCurrency: 160500
+                    RoundOff: null
+                    TotalTaxBranchCurrency: 0
+                    GrandTotalBranchCurrency: 160500
+                    VendorBillAmount: null
+                    Variance: null
+                    MismatchedCount: null
+                  OtherDetails:
+                    Remarks: null
+                    Notes: null
+                    Clause: null
+                  Bank:
+                    BankName: HDFC Bank Ltd
+                    BankSwift: HDFCINBB
+                    LocalBankCode: HDFC0001234
+                    CurrencyCode: INR
+                    BankAcNumber: "50100287346921"
+                    IBAN: null
+                    BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+                  DocumentStatus:
+                    CurrentStatus: Posted
+                    CreatedBy: "23405"
+                    CreatedDate: "2026-03-16T09:15:00Z"
+                    PostedBy: "23405"
+                    PostedDate: "2026-03-16T09:45:00Z"
+                    VoidedBy: null
+                    VoidedDate: null
+                    CancelledBy: null
+                    CancelledDate: null
+                  ShipmentReferences:
+                    - ShipmentId: "56988"
+                      ShipmentNumber: "1"
+                      JobNumber: "1"
+                      MasterNumber: 125-98754655
+                      HouseNumber: null
+                      Mode: Air
+                      Direction: Export
+                  Attachments:
+                    - AttachmentId: "55909"
+                      FileName: MAWB_125-98754655.pdf
+                      FileURL: https://fmstest.freightoscope.com/documents/55909/MAWB_125-98754655.pdf
+                      DocumentType: HAWB
+                      Direction: DocsOut
+                      Description: Master AWB copy
+                      UploadedBy: "23405"
+                      UploadedOn: "2026-03-16T09:20:00Z"
+                  OtherAuditTrail:
+                    NetworkId: "0"
+                    IPAddress: 103.122.291.98
+                    Browser: CHROME 145
+      responses:
+        '200':
+          description: Invoice document payload posted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid payload or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /post/creditnote/:
+    post:
+      tags:
+        - Financial Documents
+      summary: Post credit note document data
+      operationId: postCreditNoteDocument
+      description: Sends Freightoscope credit note document data to an external system.
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditNoteDocumentPayload'
+            examples:
+              creditNote:
+                value:
+                  Document:
+                    DocumentType: CreditNote
+                    DocumentCategory: AR
+                    DocumentId: "1553201"
+                    DocumentNumber: CN01012/2627
+                    DocumentDate: "2026-03-18"
+                    PaymentTerms:
+                      Code: IMM
+                      Description: Immediately
+                      Days: 0
+                    DueDate: "2026-03-18"
+                    PostingReferenceId: null
+                    AccountSystemId: null
+                    AccountPostingId: null
+                  Party:
+                    PartyId: "301051"
+                    PartyCode: AAK01
+                    Name: Aakash
+                    Address:
+                      Address1: B1 vidya nagar
+                      Address2: near school
+                      Address3: katemaniva
+                      City: mumbai
+                      State: Maharashtra
+                      Country: India
+                      ZipCode: "421306"
+                    Phone: null
+                    Email: null
+                    VATNumber: null
+                  Currency:
+                    DocumentCurrency: INR
+                    BranchCurrency: INR
+                    ExchangeRateBranchToDocument: 1
+                  VendorDocumentDetails: null
+                  AdjustmentDetails:
+                    - DocumentId: "1552039"
+                      DocumentNumber: INV01012/2627
+                      DocumentType: Invoice
+                  LineItems:
+                    - LineItemId: "55801"
+                      SequenceNumber: 1
+                      ShipmentType: Master
+                      JobNumber: "1"
+                      ShipmentNumber: "1"
+                      Mode: Air
+                      Direction: Export
+                      MasterNumber: 125-98754655
+                      HouseNumber: null
+                      Charge:
+                        ChargeId: "18060"
+                        ChargeCode: AFT
+                        Description: Air Freight Charge
+                      PrepaidCollect: Prepaid
+                      Quantity: 1
+                      Basis: Per Shipment
+                      Rate: 5000
+                      LineCurrency: INR
+                      AmountLineCurrency: 5000
+                      ExchangeRateLineToBranch: 1
+                      AmountBranchCurrency: 5000
+                      ExchangeRateBranchToDocument: 1
+                      AmountDocumentCurrency: 5000
+                      Tax:
+                        TaxId: "15030"
+                        TaxCode: NIL RATED
+                        Description: NIL RATED
+                        Rate: 0
+                      TaxPercent: 0
+                      TaxAmountBranchCurrency: 0
+                      TaxAmountDocumentCurrency: 0
+                      TotalAmountLineCurrency: 5000
+                      TotalAmountBranchCurrency: 5000
+                      TotalAmountDocumentCurrency: 5000
+                      BillAmount: null
+                      Difference: null
+                      BillRemarks: null
+                  Totals:
+                    TotalTaxableAmountDocumentCurrency: 5000
+                    TotalTaxDocumentCurrency: 0
+                    GrandTotalDocumentCurrency: 5000
+                    TotalTaxableAmountBranchCurrency: 5000
+                    RoundOff: null
+                    TotalTaxBranchCurrency: 0
+                    GrandTotalBranchCurrency: 5000
+                    VendorBillAmount: null
+                    Variance: null
+                    MismatchedCount: null
+                  OtherDetails:
+                    Remarks: null
+                    Notes: null
+                    Clause: null
+                  Bank:
+                    BankName: HDFC Bank Ltd
+                    BankSwift: HDFCINBB
+                    LocalBankCode: HDFC0001234
+                    CurrencyCode: INR
+                    BankAcNumber: "50100287346921"
+                    IBAN: null
+                    BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+                  DocumentStatus:
+                    CurrentStatus: Posted
+                    CreatedBy: "23405"
+                    CreatedDate: "2026-03-18T10:00:00Z"
+                    PostedBy: "23405"
+                    PostedDate: "2026-03-18T10:30:00Z"
+                    VoidedBy: null
+                    VoidedDate: null
+                    CancelledBy: null
+                    CancelledDate: null
+                  ShipmentReferences:
+                    - ShipmentId: "56988"
+                      ShipmentNumber: "1"
+                      JobNumber: "1"
+                      MasterNumber: 125-98754655
+                      HouseNumber: null
+                      Mode: Air
+                      Direction: Export
+                  Attachments: []
+                  OtherAuditTrail:
+                    NetworkId: "0"
+                    IPAddress: 103.122.291.98
+                    Browser: CHROME 145
+      responses:
+        '200':
+          description: Credit note document payload posted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid payload or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # /post/debitnote/:
+  #   post:
+  #     tags:
+  #       - Financial Documents
+  #     summary: Post debit note document data
+  #     operationId: postDebitNoteDocument
+  #     description: Sends Freightoscope debit note document data to an external system.
+  #     security:
+  #       - basicAuth: []
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/DebitNoteDocumentPayload'
+  #     responses:
+  #       '200':
+  #         description: Debit note document payload posted successfully
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/SuccessResponse'
+  #       '400':
+  #         description: Invalid payload or validation failure
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  #       '401':
+  #         description: Invalid credentials
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  # /post/bill/:
+  #   post:
+  #     tags:
+  #       - Financial Documents
+  #     summary: Post bill document data
+  #     operationId: postBillDocument
+  #     description: Sends Freightoscope bill document data to an external system.
+  #     security:
+  #       - basicAuth: []
+  #     requestBody:
+  #       required: true
+  #     content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/BillDocumentPayload'
+  #     responses:
+  #       '200':
+  #         description: Bill document payload posted successfully
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/SuccessResponse'
+  #       '400':
+  #         description: Invalid payload or validation failure
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+  #       '401':
+  #         description: Invalid credentials
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Use the Freightoscope-provided username and password for this integration.
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Document posted successfully
+        Code:
+          type: integer
+          example: 200
+    ErrorResponse:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: Validation failed
+        Code:
+          type: integer
+          example: 400
+    PaymentTerms:
+      type: object
+      properties:
+        Code:
+          type: string
+        Description:
+          type: string
+        Days:
+          type: integer
+    DocumentHeader:
+      type: object
+      properties:
+        DocumentType:
+          type: string
+        DocumentCategory:
+          type: string
+        DocumentId:
+          type: string
+        DocumentNumber:
+          type: string
+        DocumentDate:
+          type: string
+          format: date
+        PaymentTerms:
+          $ref: '#/components/schemas/PaymentTerms'
+        DueDate:
+          type: string
+          format: date
+        PostingReferenceId:
+          type: string
+          nullable: true
+        AccountSystemId:
+          type: string
+          nullable: true
+        AccountPostingId:
+          type: string
+          nullable: true
+    Address:
+      type: object
+      properties:
+        Address1:
+          type: string
+          nullable: true
+        Address2:
+          type: string
+          nullable: true
+        Address3:
+          type: string
+          nullable: true
+        City:
+          type: string
+          nullable: true
+        State:
+          type: string
+          nullable: true
+        Country:
+          type: string
+          nullable: true
+        ZipCode:
+          type: string
+          nullable: true
+    Party:
+      type: object
+      properties:
+        PartyId:
+          type: string
+        PartyCode:
+          type: string
+        Name:
+          type: string
+        Address:
+          $ref: '#/components/schemas/Address'
+        Phone:
+          type: string
+          nullable: true
+        Email:
+          type: string
+          nullable: true
+        VATNumber:
+          type: string
+          nullable: true
+    Currency:
+      type: object
+      properties:
+        DocumentCurrency:
+          type: string
+        BranchCurrency:
+          type: string
+        ExchangeRateBranchToDocument:
+          type: number
+          format: double
+    VendorDocumentDetails:
+      type: object
+      properties:
+        VendorDocumentNumber:
+          type: string
+        VendorDocumentAmount:
+          type: number
+          format: double
+        VendorDocumentCurrency:
+          type: string
+        VendorDocumentDate:
+          type: string
+          format: date
+    VendorInvoiceDetails:
+      type: object
+      properties:
+        VendorInvoiceNumber:
+          type: string
+        VendorInvoiceAmount:
+          type: number
+          format: double
+        VendorInvoiceCurrency:
+          type: string
+        VendorInvoiceDate:
+          type: string
+          format: date
+    AdjustmentDetail:
+      type: object
+      properties:
+        DocumentId:
+          type: string
+        DocumentNumber:
+          type: string
+        DocumentType:
+          type: string
+    Charge:
+      type: object
+      properties:
+        ChargeId:
+          type: string
+        ChargeCode:
+          type: string
+        Description:
+          type: string
+    Tax:
+      type: object
+      properties:
+        TaxId:
+          type: string
+          nullable: true
+        TaxCode:
+          type: string
+          nullable: true
+        Description:
+          type: string
+          nullable: true
+        Rate:
+          type: number
+          format: double
+    LineItem:
+      type: object
+      properties:
+        LineItemId:
+          type: string
+        SequenceNumber:
+          type: integer
+        ShipmentType:
+          type: string
+          nullable: true
+        JobNumber:
+          type: string
+          nullable: true
+        ShipmentNumber:
+          type: string
+          nullable: true
+        Mode:
+          type: string
+          nullable: true
+        Direction:
+          type: string
+          nullable: true
+        MasterNumber:
+          type: string
+          nullable: true
+        HouseNumber:
+          type: string
+          nullable: true
+        Charge:
+          $ref: '#/components/schemas/Charge'
+        PrepaidCollect:
+          type: string
+          nullable: true
+        Quantity:
+          type: number
+          format: double
+        Basis:
+          type: string
+          nullable: true
+        Rate:
+          type: number
+          format: double
+        LineCurrency:
+          type: string
+        AmountLineCurrency:
+          type: number
+          format: double
+        ExchangeRateLineToBranch:
+          type: number
+          format: double
+        AmountBranchCurrency:
+          type: number
+          format: double
+        ExchangeRateBranchToDocument:
+          type: number
+          format: double
+        AmountDocumentCurrency:
+          type: number
+          format: double
+        Tax:
+          $ref: '#/components/schemas/Tax'
+        TaxPercent:
+          type: number
+          format: double
+        TaxAmountBranchCurrency:
+          type: number
+          format: double
+        TaxAmountDocumentCurrency:
+          type: number
+          format: double
+        TotalAmountLineCurrency:
+          type: number
+          format: double
+        TotalAmountBranchCurrency:
+          type: number
+          format: double
+        TotalAmountDocumentCurrency:
+          type: number
+          format: double
+        BillAmount:
+          type: number
+          format: double
+          nullable: true
+        Difference:
+          type: number
+          format: double
+          nullable: true
+        BillRemarks:
+          type: string
+          nullable: true
+    Totals:
+      type: object
+      properties:
+        TotalTaxableAmountDocumentCurrency:
+          type: number
+          format: double
+        TotalTaxDocumentCurrency:
+          type: number
+          format: double
+        GrandTotalDocumentCurrency:
+          type: number
+          format: double
+        TotalTaxableAmountBranchCurrency:
+          type: number
+          format: double
+        RoundOff:
+          type: number
+          format: double
+          nullable: true
+        TotalTaxBranchCurrency:
+          type: number
+          format: double
+        GrandTotalBranchCurrency:
+          type: number
+          format: double
+        VendorBillAmount:
+          type: number
+          format: double
+          nullable: true
+        Variance:
+          type: number
+          format: double
+          nullable: true
+        MismatchedCount:
+          type: integer
+          nullable: true
+    OtherDetails:
+      type: object
+      properties:
+        Remarks:
+          type: string
+          nullable: true
+        Notes:
+          type: string
+          nullable: true
+        Clause:
+          type: string
+          nullable: true
+    Bank:
+      type: object
+      nullable: true
+      properties:
+        BankName:
+          type: string
+          nullable: true
+        BankSwift:
+          type: string
+          nullable: true
+        LocalBankCode:
+          type: string
+          nullable: true
+        CurrencyCode:
+          type: string
+          nullable: true
+        BankAcNumber:
+          type: string
+          nullable: true
+        IBAN:
+          type: string
+          nullable: true
+        BankAddress:
+          type: string
+          nullable: true
+    DocumentStatus:
+      type: object
+      properties:
+        CurrentStatus:
+          type: string
+        CreatedBy:
+          type: string
+          nullable: true
+        CreatedDate:
+          type: string
+          format: date-time
+          nullable: true
+        PostedBy:
+          type: string
+          nullable: true
+        PostedDate:
+          type: string
+          format: date-time
+          nullable: true
+        VoidedBy:
+          type: string
+          nullable: true
+        VoidedDate:
+          type: string
+          format: date-time
+          nullable: true
+        CancelledBy:
+          type: string
+          nullable: true
+        CancelledDate:
+          type: string
+          format: date-time
+          nullable: true
+    ShipmentReference:
+      type: object
+      properties:
+        ShipmentId:
+          type: string
+        ShipmentNumber:
+          type: string
+        JobNumber:
+          type: string
+        MasterNumber:
+          type: string
+          nullable: true
+        HouseNumber:
+          type: string
+          nullable: true
+        Mode:
+          type: string
+          nullable: true
+        Direction:
+          type: string
+          nullable: true
+    Attachment:
+      type: object
+      properties:
+        AttachmentId:
+          type: string
+        FileName:
+          type: string
+        FileURL:
+          type: string
+        DocumentType:
+          type: string
+          nullable: true
+        Direction:
+          type: string
+          nullable: true
+        Description:
+          type: string
+          nullable: true
+        UploadedBy:
+          type: string
+          nullable: true
+        UploadedOn:
+          type: string
+          format: date-time
+          nullable: true
+    AuditTrail:
+      type: object
+      properties:
+        NetworkId:
+          type: string
+          nullable: true
+        IPAddress:
+          type: string
+          nullable: true
+        Browser:
+          type: string
+          nullable: true
+    BaseFinancialDocumentPayload:
+      type: object
+      properties:
+        Document:
+          $ref: '#/components/schemas/DocumentHeader'
+        Party:
+          $ref: '#/components/schemas/Party'
+        Currency:
+          $ref: '#/components/schemas/Currency'
+        AdjustmentDetails:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/AdjustmentDetail'
+        LineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        Totals:
+          $ref: '#/components/schemas/Totals'
+        OtherDetails:
+          $ref: '#/components/schemas/OtherDetails'
+        Bank:
+          $ref: '#/components/schemas/Bank'
+        DocumentStatus:
+          $ref: '#/components/schemas/DocumentStatus'
+        ShipmentReferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShipmentReference'
+        Attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        OtherAuditTrail:
+          $ref: '#/components/schemas/AuditTrail'
+    InvoiceDocumentPayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseFinancialDocumentPayload'
+        - type: object
+          properties:
+            VendorDocumentDetails:
+              type: object
+              nullable: true
+      example:
+        Document:
+          DocumentType: Invoice
+          DocumentCategory: AR
+          DocumentId: "1552039"
+          DocumentNumber: INV01012/2627
+          DocumentDate: "2026-03-16"
+          PaymentTerms:
+            Code: IMM
+            Description: Immediately
+            Days: 0
+          DueDate: "2026-03-16"
+          PostingReferenceId: null
+          AccountSystemId: null
+          AccountPostingId: null
+        Party:
+          PartyId: "301051"
+          PartyCode: AAK01
+          Name: Aakash
+          Address:
+            Address1: B1 vidya nagar
+            Address2: near school
+            Address3: katemaniva
+            City: mumbai
+            State: Maharashtra
+            Country: India
+            ZipCode: "421306"
+          Phone: null
+          Email: null
+          VATNumber: null
+        Currency:
+          DocumentCurrency: INR
+          BranchCurrency: INR
+          ExchangeRateBranchToDocument: 1
+        VendorDocumentDetails: null
+        AdjustmentDetails: null
+        LineItems:
+          - LineItemId: "55604"
+            SequenceNumber: 1
+            ShipmentType: Master
+            JobNumber: "1"
+            ShipmentNumber: "1"
+            Mode: Air
+            Direction: Export
+            MasterNumber: 125-98754655
+            HouseNumber: null
+            Charge:
+              ChargeId: "18060"
+              ChargeCode: AFT
+              Description: Air Freight Charge
+            PrepaidCollect: Prepaid
+            Quantity: 1
+            Basis: Per Shipment
+            Rate: 155000
+            LineCurrency: INR
+            AmountLineCurrency: 155000
+            ExchangeRateLineToBranch: 1
+            AmountBranchCurrency: 155000
+            ExchangeRateBranchToDocument: 1
+            AmountDocumentCurrency: 155000
+            Tax:
+              TaxId: "15030"
+              TaxCode: NIL RATED
+              Description: NIL RATED
+              Rate: 0
+            TaxPercent: 0
+            TaxAmountBranchCurrency: 0
+            TaxAmountDocumentCurrency: 0
+            TotalAmountLineCurrency: 155000
+            TotalAmountBranchCurrency: 155000
+            TotalAmountDocumentCurrency: 155000
+            BillAmount: null
+            Difference: null
+            BillRemarks: null
+        Totals:
+          TotalTaxableAmountDocumentCurrency: 160500
+          TotalTaxDocumentCurrency: 0
+          GrandTotalDocumentCurrency: 160500
+          TotalTaxableAmountBranchCurrency: 160500
+          RoundOff: null
+          TotalTaxBranchCurrency: 0
+          GrandTotalBranchCurrency: 160500
+          VendorBillAmount: null
+          Variance: null
+          MismatchedCount: null
+        OtherDetails:
+          Remarks: null
+          Notes: null
+          Clause: null
+        Bank:
+          BankName: HDFC Bank Ltd
+          BankSwift: HDFCINBB
+          LocalBankCode: HDFC0001234
+          CurrencyCode: INR
+          BankAcNumber: "50100287346921"
+          IBAN: null
+          BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+        DocumentStatus:
+          CurrentStatus: Posted
+          CreatedBy: "23405"
+          CreatedDate: "2026-03-16T09:15:00Z"
+          PostedBy: "23405"
+          PostedDate: "2026-03-16T09:45:00Z"
+          VoidedBy: null
+          VoidedDate: null
+          CancelledBy: null
+          CancelledDate: null
+        ShipmentReferences:
+          - ShipmentId: "56988"
+            ShipmentNumber: "1"
+            JobNumber: "1"
+            MasterNumber: 125-98754655
+            HouseNumber: null
+            Mode: Air
+            Direction: Export
+        Attachments:
+          - AttachmentId: "55909"
+            FileName: MAWB_125-98754655.pdf
+            FileURL: https://fmstest.freightoscope.com/documents/55909/MAWB_125-98754655.pdf
+            DocumentType: HAWB
+            Direction: DocsOut
+            Description: Master AWB copy
+            UploadedBy: "23405"
+            UploadedOn: "2026-03-16T09:20:00Z"
+        OtherAuditTrail:
+          NetworkId: "0"
+          IPAddress: 103.122.291.98
+          Browser: CHROME 145
+    CreditNoteDocumentPayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseFinancialDocumentPayload'
+        - type: object
+          properties:
+            VendorDocumentDetails:
+              type: object
+              nullable: true
+      example:
+        Document:
+          DocumentType: CreditNote
+          DocumentCategory: AR
+          DocumentId: "1553201"
+          DocumentNumber: CN01012/2627
+          DocumentDate: "2026-03-18"
+          PaymentTerms:
+            Code: IMM
+            Description: Immediately
+            Days: 0
+          DueDate: "2026-03-18"
+          PostingReferenceId: null
+          AccountSystemId: null
+          AccountPostingId: null
+        Party:
+          PartyId: "301051"
+          PartyCode: AAK01
+          Name: Aakash
+          Address:
+            Address1: B1 vidya nagar
+            Address2: near school
+            Address3: katemaniva
+            City: mumbai
+            State: Maharashtra
+            Country: India
+            ZipCode: "421306"
+          Phone: null
+          Email: null
+          VATNumber: null
+        Currency:
+          DocumentCurrency: INR
+          BranchCurrency: INR
+          ExchangeRateBranchToDocument: 1
+        VendorDocumentDetails: null
+        AdjustmentDetails:
+          - DocumentId: "1552039"
+            DocumentNumber: INV01012/2627
+            DocumentType: Invoice
+        LineItems:
+          - LineItemId: "55801"
+            SequenceNumber: 1
+            ShipmentType: Master
+            JobNumber: "1"
+            ShipmentNumber: "1"
+            Mode: Air
+            Direction: Export
+            MasterNumber: 125-98754655
+            HouseNumber: null
+            Charge:
+              ChargeId: "18060"
+              ChargeCode: AFT
+              Description: Air Freight Charge
+            PrepaidCollect: Prepaid
+            Quantity: 1
+            Basis: Per Shipment
+            Rate: 5000
+            LineCurrency: INR
+            AmountLineCurrency: 5000
+            ExchangeRateLineToBranch: 1
+            AmountBranchCurrency: 5000
+            ExchangeRateBranchToDocument: 1
+            AmountDocumentCurrency: 5000
+            Tax:
+              TaxId: "15030"
+              TaxCode: NIL RATED
+              Description: NIL RATED
+              Rate: 0
+            TaxPercent: 0
+            TaxAmountBranchCurrency: 0
+            TaxAmountDocumentCurrency: 0
+            TotalAmountLineCurrency: 5000
+            TotalAmountBranchCurrency: 5000
+            TotalAmountDocumentCurrency: 5000
+            BillAmount: null
+            Difference: null
+            BillRemarks: null
+        Totals:
+          TotalTaxableAmountDocumentCurrency: 5000
+          TotalTaxDocumentCurrency: 0
+          GrandTotalDocumentCurrency: 5000
+          TotalTaxableAmountBranchCurrency: 5000
+          RoundOff: null
+          TotalTaxBranchCurrency: 0
+          GrandTotalBranchCurrency: 5000
+          VendorBillAmount: null
+          Variance: null
+          MismatchedCount: null
+        OtherDetails:
+          Remarks: null
+          Notes: null
+          Clause: null
+        Bank:
+          BankName: HDFC Bank Ltd
+          BankSwift: HDFCINBB
+          LocalBankCode: HDFC0001234
+          CurrencyCode: INR
+          BankAcNumber: "50100287346921"
+          IBAN: null
+          BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+        DocumentStatus:
+          CurrentStatus: Posted
+          CreatedBy: "23405"
+          CreatedDate: "2026-03-18T10:00:00Z"
+          PostedBy: "23405"
+          PostedDate: "2026-03-18T10:30:00Z"
+          VoidedBy: null
+          VoidedDate: null
+          CancelledBy: null
+          CancelledDate: null
+        ShipmentReferences:
+          - ShipmentId: "56988"
+            ShipmentNumber: "1"
+            JobNumber: "1"
+            MasterNumber: 125-98754655
+            HouseNumber: null
+            Mode: Air
+            Direction: Export
+        Attachments: []
+        OtherAuditTrail:
+          NetworkId: "0"
+          IPAddress: 103.122.291.98
+          Browser: CHROME 145
+    DebitNoteDocumentPayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseFinancialDocumentPayload'
+        - type: object
+          properties:
+            VendorDocumentDetails:
+              $ref: '#/components/schemas/VendorDocumentDetails'
+    BillDocumentPayload:
+      allOf:
+        - $ref: '#/components/schemas/BaseFinancialDocumentPayload'
+        - type: object
+          properties:
+            VendorInvoiceDetails:
+              $ref: '#/components/schemas/VendorInvoiceDetails'
