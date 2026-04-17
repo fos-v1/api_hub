@@ -26,186 +26,13 @@ paths:
       description: Sends Freightoscope invoice document data to an external system.
       security:
         - basicAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InvoiceDocumentPayload'
-            examples:
-              invoice:
-                value:
-                  Document:
-                    DocumentType: Invoice
-                    DocumentCategory: AR
-                    DocumentId: "1552039"
-                    DocumentNumber: INV01012/2627
-                    DocumentDate: "2026-03-16"
-                    PaymentTerms:
-                      Code: IMM
-                      Description: Immediately
-                      Days: 0
-                    DueDate: "2026-03-16"
-                    PostingReferenceId: null
-                    AccountSystemId: null
-                    AccountPostingId: null
-                  Party:
-                    PartyId: "301051"
-                    PartyCode: AAK01
-                    Name: Aakash
-                    Address:
-                      Address1: B1 vidya nagar
-                      Address2: near school
-                      Address3: katemaniva
-                      City: mumbai
-                      State: Maharashtra
-                      Country: India
-                      ZipCode: "421306"
-                    Phone: null
-                    Email: null
-                    VATNumber: null
-                  Currency:
-                    DocumentCurrency: INR
-                    BranchCurrency: INR
-                    ExchangeRateBranchToDocument: 1
-                  VendorDocumentDetails: null
-                  AdjustmentDetails: null
-                  LineItems:
-                    - LineItemId: "55604"
-                      SequenceNumber: 1
-                      ShipmentType: Master
-                      JobNumber: "1"
-                      ShipmentNumber: "1"
-                      Mode: Air
-                      Direction: Export
-                      MasterNumber: 125-98754655
-                      HouseNumber: null
-                      Charge:
-                        ChargeId: "18060"
-                        ChargeCode: AFT
-                        Description: Air Freight Charge
-                      PrepaidCollect: Prepaid
-                      Quantity: 1
-                      Basis: Per Shipment
-                      Rate: 155000
-                      LineCurrency: INR
-                      AmountLineCurrency: 155000
-                      ExchangeRateLineToBranch: 1
-                      AmountBranchCurrency: 155000
-                      ExchangeRateBranchToDocument: 1
-                      AmountDocumentCurrency: 155000
-                      Tax:
-                        TaxId: "15030"
-                        TaxCode: NIL RATED
-                        Description: NIL RATED
-                        Rate: 0
-                      TaxPercent: 0
-                      TaxAmountBranchCurrency: 0
-                      TaxAmountDocumentCurrency: 0
-                      TotalAmountLineCurrency: 155000
-                      TotalAmountBranchCurrency: 155000
-                      TotalAmountDocumentCurrency: 155000
-                      BillAmount: null
-                      Difference: null
-                      BillRemarks: null
-                    - LineItemId: "50968"
-                      SequenceNumber: 2
-                      ShipmentType: Master
-                      JobNumber: "1"
-                      ShipmentNumber: "1"
-                      Mode: Air
-                      Direction: Export
-                      MasterNumber: 125-98754655
-                      HouseNumber: null
-                      Charge:
-                        ChargeId: "35409"
-                        ChargeCode: AWF
-                        Description: Air Waybill Fee
-                      PrepaidCollect: Prepaid
-                      Quantity: 1
-                      Basis: Per AWB
-                      Rate: 5500
-                      LineCurrency: INR
-                      AmountLineCurrency: 5500
-                      ExchangeRateLineToBranch: 1
-                      AmountBranchCurrency: 5500
-                      ExchangeRateBranchToDocument: 1
-                      AmountDocumentCurrency: 5500
-                      Tax:
-                        TaxId: "15030"
-                        TaxCode: NIL RATED
-                        Description: NIL RATED
-                        Rate: 0
-                      TaxPercent: 0
-                      TaxAmountBranchCurrency: 0
-                      TaxAmountDocumentCurrency: 0
-                      TotalAmountLineCurrency: 5500
-                      TotalAmountBranchCurrency: 5500
-                      TotalAmountDocumentCurrency: 5500
-                      BillAmount: null
-                      Difference: null
-                      BillRemarks: null
-                  Totals:
-                    TotalTaxableAmountDocumentCurrency: 160500
-                    TotalTaxDocumentCurrency: 0
-                    GrandTotalDocumentCurrency: 160500
-                    TotalTaxableAmountBranchCurrency: 160500
-                    RoundOff: null
-                    TotalTaxBranchCurrency: 0
-                    GrandTotalBranchCurrency: 160500
-                    VendorBillAmount: null
-                    Variance: null
-                    MismatchedCount: null
-                  OtherDetails:
-                    Remarks: null
-                    Notes: null
-                    Clause: null
-                  Bank:
-                    BankName: HDFC Bank Ltd
-                    BankSwift: HDFCINBB
-                    LocalBankCode: HDFC0001234
-                    CurrencyCode: INR
-                    BankAcNumber: "50100287346921"
-                    IBAN: null
-                    BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
-                  DocumentStatus:
-                    CurrentStatus: Posted
-                    CreatedBy: "23405"
-                    CreatedDate: "2026-03-16T09:15:00Z"
-                    PostedBy: "23405"
-                    PostedDate: "2026-03-16T09:45:00Z"
-                    VoidedBy: null
-                    VoidedDate: null
-                    CancelledBy: null
-                    CancelledDate: null
-                  ShipmentReferences:
-                    - ShipmentId: "56988"
-                      ShipmentNumber: "1"
-                      JobNumber: "1"
-                      MasterNumber: 125-98754655
-                      HouseNumber: null
-                      Mode: Air
-                      Direction: Export
-                  Attachments:
-                    - AttachmentId: "55909"
-                      FileName: MAWB_125-98754655.pdf
-                      FileURL: https://fmstest.freightoscope.com/documents/55909/MAWB_125-98754655.pdf
-                      DocumentType: HAWB
-                      Direction: DocsOut
-                      Description: Master AWB copy
-                      UploadedBy: "23405"
-                      UploadedOn: "2026-03-16T09:20:00Z"
-                  OtherAuditTrail:
-                    NetworkId: "0"
-                    IPAddress: 103.122.291.98
-                    Browser: CHROME 145
       responses:
         '200':
-          description: Invoice document payload posted successfully
+          description: Invoice document payload returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/InvoiceDocumentPayload'
         '400':
           description: Invalid payload or validation failure
           content:
@@ -227,144 +54,13 @@ paths:
       description: Sends Freightoscope credit note document data to an external system.
       security:
         - basicAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreditNoteDocumentPayload'
-            examples:
-              creditNote:
-                value:
-                  Document:
-                    DocumentType: CreditNote
-                    DocumentCategory: AR
-                    DocumentId: "1553201"
-                    DocumentNumber: CN01012/2627
-                    DocumentDate: "2026-03-18"
-                    PaymentTerms:
-                      Code: IMM
-                      Description: Immediately
-                      Days: 0
-                    DueDate: "2026-03-18"
-                    PostingReferenceId: null
-                    AccountSystemId: null
-                    AccountPostingId: null
-                  Party:
-                    PartyId: "301051"
-                    PartyCode: AAK01
-                    Name: Aakash
-                    Address:
-                      Address1: B1 vidya nagar
-                      Address2: near school
-                      Address3: katemaniva
-                      City: mumbai
-                      State: Maharashtra
-                      Country: India
-                      ZipCode: "421306"
-                    Phone: null
-                    Email: null
-                    VATNumber: null
-                  Currency:
-                    DocumentCurrency: INR
-                    BranchCurrency: INR
-                    ExchangeRateBranchToDocument: 1
-                  VendorDocumentDetails: null
-                  AdjustmentDetails:
-                    - DocumentId: "1552039"
-                      DocumentNumber: INV01012/2627
-                      DocumentType: Invoice
-                  LineItems:
-                    - LineItemId: "55801"
-                      SequenceNumber: 1
-                      ShipmentType: Master
-                      JobNumber: "1"
-                      ShipmentNumber: "1"
-                      Mode: Air
-                      Direction: Export
-                      MasterNumber: 125-98754655
-                      HouseNumber: null
-                      Charge:
-                        ChargeId: "18060"
-                        ChargeCode: AFT
-                        Description: Air Freight Charge
-                      PrepaidCollect: Prepaid
-                      Quantity: 1
-                      Basis: Per Shipment
-                      Rate: 5000
-                      LineCurrency: INR
-                      AmountLineCurrency: 5000
-                      ExchangeRateLineToBranch: 1
-                      AmountBranchCurrency: 5000
-                      ExchangeRateBranchToDocument: 1
-                      AmountDocumentCurrency: 5000
-                      Tax:
-                        TaxId: "15030"
-                        TaxCode: NIL RATED
-                        Description: NIL RATED
-                        Rate: 0
-                      TaxPercent: 0
-                      TaxAmountBranchCurrency: 0
-                      TaxAmountDocumentCurrency: 0
-                      TotalAmountLineCurrency: 5000
-                      TotalAmountBranchCurrency: 5000
-                      TotalAmountDocumentCurrency: 5000
-                      BillAmount: null
-                      Difference: null
-                      BillRemarks: null
-                  Totals:
-                    TotalTaxableAmountDocumentCurrency: 5000
-                    TotalTaxDocumentCurrency: 0
-                    GrandTotalDocumentCurrency: 5000
-                    TotalTaxableAmountBranchCurrency: 5000
-                    RoundOff: null
-                    TotalTaxBranchCurrency: 0
-                    GrandTotalBranchCurrency: 5000
-                    VendorBillAmount: null
-                    Variance: null
-                    MismatchedCount: null
-                  OtherDetails:
-                    Remarks: null
-                    Notes: null
-                    Clause: null
-                  Bank:
-                    BankName: HDFC Bank Ltd
-                    BankSwift: HDFCINBB
-                    LocalBankCode: HDFC0001234
-                    CurrencyCode: INR
-                    BankAcNumber: "50100287346921"
-                    IBAN: null
-                    BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
-                  DocumentStatus:
-                    CurrentStatus: Posted
-                    CreatedBy: "23405"
-                    CreatedDate: "2026-03-18T10:00:00Z"
-                    PostedBy: "23405"
-                    PostedDate: "2026-03-18T10:30:00Z"
-                    VoidedBy: null
-                    VoidedDate: null
-                    CancelledBy: null
-                    CancelledDate: null
-                  ShipmentReferences:
-                    - ShipmentId: "56988"
-                      ShipmentNumber: "1"
-                      JobNumber: "1"
-                      MasterNumber: 125-98754655
-                      HouseNumber: null
-                      Mode: Air
-                      Direction: Export
-                  Attachments: []
-                  OtherAuditTrail:
-                    NetworkId: "0"
-                    IPAddress: 103.122.291.98
-                    Browser: CHROME 145
       responses:
         '200':
-          description: Credit note document payload posted successfully
+          description: Credit note document payload returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/CreditNoteDocumentPayload'
         '400':
           description: Invalid payload or validation failure
           content:
@@ -377,74 +73,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  # /post/debitnote/:
-  #   post:
-  #     tags:
-  #       - Financial Documents
-  #     summary: Post debit note document data
-  #     operationId: postDebitNoteDocument
-  #     description: Sends Freightoscope debit note document data to an external system.
-  #     security:
-  #       - basicAuth: []
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/DebitNoteDocumentPayload'
-  #     responses:
-  #       '200':
-  #         description: Debit note document payload posted successfully
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/SuccessResponse'
-  #       '400':
-  #         description: Invalid payload or validation failure
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/ErrorResponse'
-  #       '401':
-  #         description: Invalid credentials
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/ErrorResponse'
-  # /post/bill/:
-  #   post:
-  #     tags:
-  #       - Financial Documents
-  #     summary: Post bill document data
-  #     operationId: postBillDocument
-  #     description: Sends Freightoscope bill document data to an external system.
-  #     security:
-  #       - basicAuth: []
-  #     requestBody:
-  #       required: true
-  #     content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/BillDocumentPayload'
-  #     responses:
-  #       '200':
-  #         description: Bill document payload posted successfully
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/SuccessResponse'
-  #       '400':
-  #         description: Invalid payload or validation failure
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/ErrorResponse'
-  #       '401':
-  #         description: Invalid credentials
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/ErrorResponse'
+  /post/debitnote/:
+    post:
+      tags:
+        - Financial Documents
+      summary: Post debit note document data
+      operationId: postDebitNoteDocument
+      description: Sends Freightoscope debit note document data to an external system.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Debit note document payload returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebitNoteDocumentPayload'
+        '400':
+          description: Invalid payload or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /post/bill/:
+    post:
+      tags:
+        - Financial Documents
+      summary: Post bill document data
+      operationId: postBillDocument
+      description: Sends Freightoscope bill document data to an external system.
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Bill document payload returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillDocumentPayload'
+        '400':
+          description: Invalid payload or validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   securitySchemes:
@@ -1185,6 +869,141 @@ components:
           properties:
             VendorDocumentDetails:
               $ref: '#/components/schemas/VendorDocumentDetails'
+      example:
+        Document:
+          DocumentType: DebitNote
+          DocumentCategory: AP
+          DocumentId: "1654205"
+          DocumentNumber: DN01012/2627
+          DocumentDate: "2026-04-17"
+          PaymentTerms:
+            Code: NET30
+            Description: Net 30 Days
+            Days: 30
+          DueDate: "2026-05-17"
+          PostingReferenceId: "PR-77801"
+          AccountSystemId: "ACSYS-01"
+          AccountPostingId: "ACP-99871"
+        Party:
+          PartyId: "401022"
+          PartyCode: VEN01
+          Name: Blue Sky Logistics
+          Address:
+            Address1: 402 Cargo Plaza
+            Address2: Airport Road
+            Address3: Andheri East
+            City: Mumbai
+            State: Maharashtra
+            Country: India
+            ZipCode: "400099"
+          Phone: "+91-22-40000000"
+          Email: ap@blueskylogistics.com
+          VATNumber: GSTIN27ABCDE1234F1Z5
+        Currency:
+          DocumentCurrency: INR
+          BranchCurrency: INR
+          ExchangeRateBranchToDocument: 1
+        AdjustmentDetails:
+          - DocumentId: "1552039"
+            DocumentNumber: INV01012/2627
+            DocumentType: Invoice
+        LineItems:
+          - LineItemId: "66001"
+            SequenceNumber: 1
+            ShipmentType: Master
+            JobNumber: JOB-1001
+            ShipmentNumber: SHP-1001
+            Mode: Air
+            Direction: Import
+            MasterNumber: 125-98754655
+            HouseNumber: HAWB-2001
+            Charge:
+              ChargeId: "18060"
+              ChargeCode: AFT
+              Description: Air Freight Charge
+            PrepaidCollect: Collect
+            Quantity: 1
+            Basis: Per Shipment
+            Rate: 12500
+            LineCurrency: INR
+            AmountLineCurrency: 12500
+            ExchangeRateLineToBranch: 1
+            AmountBranchCurrency: 12500
+            ExchangeRateBranchToDocument: 1
+            AmountDocumentCurrency: 12500
+            Tax:
+              TaxId: "15031"
+              TaxCode: GST18
+              Description: GST 18%
+              Rate: 18
+            TaxPercent: 18
+            TaxAmountBranchCurrency: 2250
+            TaxAmountDocumentCurrency: 2250
+            TotalAmountLineCurrency: 14750
+            TotalAmountBranchCurrency: 14750
+            TotalAmountDocumentCurrency: 14750
+            BillAmount: 14750
+            Difference: 0
+            BillRemarks: Matched with vendor bill
+        Totals:
+          TotalTaxableAmountDocumentCurrency: 12500
+          TotalTaxDocumentCurrency: 2250
+          GrandTotalDocumentCurrency: 14750
+          TotalTaxableAmountBranchCurrency: 12500
+          RoundOff: 0
+          TotalTaxBranchCurrency: 2250
+          GrandTotalBranchCurrency: 14750
+          VendorBillAmount: 14750
+          Variance: 0
+          MismatchedCount: 0
+        OtherDetails:
+          Remarks: Debit raised for additional destination charges
+          Notes: Approved by finance team
+          Clause: Subject to supporting documents
+        Bank:
+          BankName: HDFC Bank Ltd
+          BankSwift: HDFCINBB
+          LocalBankCode: HDFC0001234
+          CurrencyCode: INR
+          BankAcNumber: "50100287346921"
+          IBAN: null
+          BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+        DocumentStatus:
+          CurrentStatus: Posted
+          CreatedBy: "23405"
+          CreatedDate: "2026-04-17T07:45:45.734Z"
+          PostedBy: "23405"
+          PostedDate: "2026-04-17T08:15:45.734Z"
+          VoidedBy: null
+          VoidedDate: null
+          CancelledBy: null
+          CancelledDate: null
+        ShipmentReferences:
+          - ShipmentId: "56988"
+            ShipmentNumber: SHP-1001
+            JobNumber: JOB-1001
+            MasterNumber: 125-98754655
+            HouseNumber: HAWB-2001
+            Mode: Air
+            Direction: Import
+        Attachments:
+          - AttachmentId: "77001"
+            FileName: debit-note-support.pdf
+            FileURL: https://fmstest.freightoscope.com/documents/77001/debit-note-support.pdf
+            DocumentType: DebitNote
+            Direction: DocsOut
+            Description: Supporting debit note attachment
+            UploadedBy: "23405"
+            UploadedOn: "2026-04-17T07:50:45.734Z"
+        OtherAuditTrail:
+          NetworkId: "NET-01"
+          IPAddress: 103.122.91.98
+          Browser: Chrome 145
+        VendorDocumentDetails:
+          VendorDocumentNumber: VEN-DN-1001
+          VendorDocumentAmount: 14750
+          VendorDocumentCurrency: INR
+          VendorDocumentDate: "2026-04-17"
     BillDocumentPayload:
       allOf:
         - $ref: '#/components/schemas/BaseFinancialDocumentPayload'
@@ -1192,3 +1011,135 @@ components:
           properties:
             VendorInvoiceDetails:
               $ref: '#/components/schemas/VendorInvoiceDetails'
+      example:
+        Document:
+          DocumentType: Bill
+          DocumentCategory: AP
+          DocumentId: "1755308"
+          DocumentNumber: BILL01012/2627
+          DocumentDate: "2026-04-17"
+          PaymentTerms:
+            Code: NET15
+            Description: Net 15 Days
+            Days: 15
+          DueDate: "2026-05-02"
+          PostingReferenceId: "PR-88902"
+          AccountSystemId: "ACSYS-01"
+          AccountPostingId: "ACP-99872"
+        Party:
+          PartyId: "401022"
+          PartyCode: VEN01
+          Name: Blue Sky Logistics
+          Address:
+            Address1: 402 Cargo Plaza
+            Address2: Airport Road
+            Address3: Andheri East
+            City: Mumbai
+            State: Maharashtra
+            Country: India
+            ZipCode: "400099"
+          Phone: "+91-22-40000000"
+          Email: ap@blueskylogistics.com
+          VATNumber: GSTIN27ABCDE1234F1Z5
+        Currency:
+          DocumentCurrency: INR
+          BranchCurrency: INR
+          ExchangeRateBranchToDocument: 1
+        AdjustmentDetails: []
+        LineItems:
+          - LineItemId: "76001"
+            SequenceNumber: 1
+            ShipmentType: Master
+            JobNumber: JOB-1002
+            ShipmentNumber: SHP-1002
+            Mode: Air
+            Direction: Import
+            MasterNumber: 125-11223344
+            HouseNumber: HAWB-3001
+            Charge:
+              ChargeId: "18061"
+              ChargeCode: DOC
+              Description: Documentation Charge
+            PrepaidCollect: Collect
+            Quantity: 1
+            Basis: Per Shipment
+            Rate: 10000
+            LineCurrency: INR
+            AmountLineCurrency: 10000
+            ExchangeRateLineToBranch: 1
+            AmountBranchCurrency: 10000
+            ExchangeRateBranchToDocument: 1
+            AmountDocumentCurrency: 10000
+            Tax:
+              TaxId: "15031"
+              TaxCode: GST18
+              Description: GST 18%
+              Rate: 18
+            TaxPercent: 18
+            TaxAmountBranchCurrency: 1800
+            TaxAmountDocumentCurrency: 1800
+            TotalAmountLineCurrency: 11800
+            TotalAmountBranchCurrency: 11800
+            TotalAmountDocumentCurrency: 11800
+            BillAmount: 11800
+            Difference: 0
+            BillRemarks: Fully billed
+        Totals:
+          TotalTaxableAmountDocumentCurrency: 10000
+          TotalTaxDocumentCurrency: 1800
+          GrandTotalDocumentCurrency: 11800
+          TotalTaxableAmountBranchCurrency: 10000
+          RoundOff: 0
+          TotalTaxBranchCurrency: 1800
+          GrandTotalBranchCurrency: 11800
+          VendorBillAmount: 11800
+          Variance: 0
+          MismatchedCount: 0
+        OtherDetails:
+          Remarks: Vendor bill received and verified
+          Notes: Process for payment
+          Clause: Original invoice required for settlement
+        Bank:
+          BankName: HDFC Bank Ltd
+          BankSwift: HDFCINBB
+          LocalBankCode: HDFC0001234
+          CurrencyCode: INR
+          BankAcNumber: "50100287346921"
+          IBAN: null
+          BankAddress: Ground Floor, Trade Centre, Bandra Kurla Complex, Mumbai 400051
+        DocumentStatus:
+          CurrentStatus: Created
+          CreatedBy: "23405"
+          CreatedDate: "2026-04-17T07:45:45.734Z"
+          PostedBy: null
+          PostedDate: null
+          VoidedBy: null
+          VoidedDate: null
+          CancelledBy: null
+          CancelledDate: null
+        ShipmentReferences:
+          - ShipmentId: "56989"
+            ShipmentNumber: SHP-1002
+            JobNumber: JOB-1002
+            MasterNumber: 125-11223344
+            HouseNumber: HAWB-3001
+            Mode: Air
+            Direction: Import
+        Attachments:
+          - AttachmentId: "88001"
+            FileName: vendor-bill.pdf
+            FileURL: https://fmstest.freightoscope.com/documents/88001/vendor-bill.pdf
+            DocumentType: Bill
+            Direction: DocsIn
+            Description: Vendor bill attachment
+            UploadedBy: "23405"
+            UploadedOn: "2026-04-17T07:46:45.734Z"
+        OtherAuditTrail:
+          NetworkId: "NET-01"
+          IPAddress: 103.122.91.98
+          Browser: Chrome 145
+        VendorInvoiceDetails:
+          VendorInvoiceNumber: VEN-BILL-1002
+          VendorInvoiceAmount: 11800
+          VendorInvoiceCurrency: INR
+          VendorInvoiceDate: "2026-04-17"
