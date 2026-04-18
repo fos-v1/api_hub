@@ -1,0 +1,909 @@
+openapi: 3.0.3
+info:
+  title: Universal Air Tracking
+  version: 1.0.0
+  description: WIN Universal Air Tracking (UAT) batch list APIs from the supplied
+    customer guide, including login, carrier lookup, and batch list POST, GET, and
+    DELETE operations.
+servers:
+- url: https://www.winwebconnect.com
+  description: WIN production environment
+- url: http://integration.winwebconnect.com
+  description: WIN integration environment from the customer guides
+tags:
+- name: Authentication
+  description: Login endpoint used before calling tracking APIs
+- name: Universal Air Tracking
+  description: Air freight batch list tracking APIs
+paths:
+  /api/v1/Login:
+    post:
+      tags:
+      - Authentication
+      summary: Login and start a WIN session
+      operationId: loginUniversalTracking
+      description: 'Authenticates with WIN and starts a session. Use the returned
+        `authToken` value from the login response as the token for all other
+        Universal Air Tracking API calls.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              Username: user@company.com
+              Password: secret
+      responses:
+        '200':
+          description: Login succeeded
+          headers:
+            Set-Cookie:
+              description: 'Session cookie containing `authToken`; send the latest
+                cookie value back on the next request.
+
+                '
+              schema:
+                type: string
+                example: authToken=abcdef123456; path=/api; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginApiResponse'
+              example:
+                headers:
+                  Cache-Control: no-cache
+                  Content-Encoding: gzip
+                  Content-Length: 806
+                  Content-Type: application/json; charset=utf-8
+                  Date: Tue, 16 Dec 2014 07:00:05 GMT
+                  Expires: '-1'
+                  Pragma: no-cache
+                  Set-Cookie:
+                    authToken: C9F3440891B1456002C223785F2C43581A00369CE7B6021E3B00FA21618FEBC51F04831AD0717A4FF7EF29A0882A38B9940E9E238CFE965ABA1C581399CCA2A804D663A521023F7953D40CC19EF6C7CED0086B6F5F8D3C7A4352111247988B4D6789876D34A526823AF18E8DC4EE44BD
+                    expires: Tue, 23-Dec-2014 07:00:05 GMT
+                    path: /api
+                    HttpOnly: true
+                  Vary: Accept-Encoding
+                body:
+                  LastLogin: '2014-12-16T10:58:52.293529Z'
+                  UserDetails:
+                    ContactID: 674
+                    AgentID: 109364
+                    FirstName: UAT
+                    LastName: APIUser
+                    Email: UAT.apiuser@company.com
+                    JobTitle: Software Application
+                    ContactNumber: '+91889999999'
+                    IsActivated: true
+                    OperatedBy: null
+                    Permissions:
+                      - airtrackingapi
+        '400':
+          description: Invalid login payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid login payload
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid login credentials
+  /api/v1/uatapi/carriers:
+    get:
+      tags:
+      - Universal Air Tracking
+      summary: Get supported UAT carriers
+      operationId: listUniversalAirTrackingCarriers
+      description: 'Returns the latest valid carrier list for Universal Air Tracking.
+
+        '
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          description: Carrier list returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierListResponse'
+              example:
+              - United Cargo
+              - Lufthansa Cargo
+              - Cathay Pacific Cargo
+        '401':
+          description: Invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid authentication token
+  /api/v1/uatapi/batchlist/agents/{AgentId}:
+    post:
+      tags:
+      - Universal Air Tracking
+      summary: Create or update UAT batch list queries
+      operationId: createUniversalAirTrackingBatchList
+      description: 'Adds one or more air tracking queries for the agent. Each POST
+        is additive and does not replace the previous list. `UpdateUntil` must be
+        no earlier than creation time and no later than 15 days after creation.
+
+        '
+      security:
+      - tokenAuth: []
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UatBatchPostRequest'
+      responses:
+        '200':
+          description: Summary of created, modified, and failed queries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchPostResponse'
+              example:
+                summary:
+                  created: 2
+                  modified: 0
+                  failed: 0
+                failed: []
+        '400':
+          description: Validation failed for one or more queries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Validation failed for one or more queries
+        '401':
+          description: Invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid authentication token
+    get:
+      tags:
+      - Universal Air Tracking
+      summary: Get UAT tracking updates
+      operationId: getUniversalAirTrackingBatchList
+      description: 'Returns air tracking updates after the provided timestamp. WIN
+        recommends polling this endpoint about every 30 minutes. If `since` is omitted,
+        WIN defaults it to roughly the previous 12 hours. To fetch queries that have
+        no tracking updates, call the same endpoint with `nodata=true`.
+
+        '
+      security:
+      - tokenAuth: []
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      - $ref: '#/components/parameters/Since'
+      - $ref: '#/components/parameters/NoData'
+      responses:
+        '200':
+          description: Tracking results returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UatBatchGetResponse'
+        '401':
+          description: Invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid authentication token
+  /api/v1/uatapi/batchlist/agents/{AgentId}/{CarrierPrefix}/awbno/{SearchValue}:
+    delete:
+      tags:
+      - Universal Air Tracking
+      summary: Delete a UAT batch list query
+      operationId: deleteUniversalAirTrackingBatchListQuery
+      description: 'Deletes the air tracking query matching the agent id, airline
+        prefix, and AWB number.
+
+        '
+      security:
+      - tokenAuth: []
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      - name: CarrierPrefix
+        in: path
+        required: true
+        description: Airline prefix for the AWB.
+        schema:
+          type: string
+          example: '117'
+      - name: SearchValue
+        in: path
+        required: true
+        description: Eleven-digit AWB number.
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+          example: '11765933486'
+      responses:
+        '204':
+          description: Query deleted successfully
+        '401':
+          description: Invalid authentication token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Invalid authentication token
+        '404':
+          description: Matching query not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+              example:
+                error: Matching query not found
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Token
+      description: 'Token authentication for all Universal Air Tracking endpoints
+        except `POST /api/v1/Login`. Pass the `authToken` value returned in the
+        login response as the `Token` header.
+
+        '
+  parameters:
+    AgentId:
+      name: AgentId
+      in: path
+      required: true
+      description: WIN agent identifier.
+      schema:
+        type: integer
+        example: 109364
+    Since:
+      name: since
+      in: query
+      required: false
+      description: 'RFC3339 / ISO 8601 timestamp representing the last successful
+        GET call.
+
+        '
+      schema:
+        type: string
+        format: date-time
+        example: '2017-05-17T12:59:00Z'
+    NoData:
+      name: nodata
+      in: query
+      required: false
+      description: 'When `true`, returns search entries for the agent whose tracking
+        results are not available.
+
+        '
+      schema:
+        type: boolean
+        example: true
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+      - Username
+      - Password
+      properties:
+        Username:
+          type: string
+          example: user@company.com
+        Password:
+          type: string
+          format: password
+          example: secret
+    LoginApiResponse:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/LoginResponseHeaders'
+        body:
+          $ref: '#/components/schemas/LoginResponse'
+    LoginResponseHeaders:
+      type: object
+      properties:
+        Cache-Control:
+          type: string
+          example: no-cache
+        Content-Encoding:
+          type: string
+          example: gzip
+        Content-Length:
+          type: integer
+          example: 806
+        Content-Type:
+          type: string
+          example: application/json; charset=utf-8
+        Date:
+          type: string
+          example: Tue, 16 Dec 2014 07:00:05 GMT
+        Expires:
+          type: string
+          example: '-1'
+        Pragma:
+          type: string
+          example: no-cache
+        Set-Cookie:
+          $ref: '#/components/schemas/AuthTokenCookie'
+        Vary:
+          type: string
+          example: Accept-Encoding
+    AuthTokenCookie:
+      type: object
+      properties:
+        authToken:
+          type: string
+        expires:
+          type: string
+          example: Tue, 23-Dec-2014 07:00:05 GMT
+        path:
+          type: string
+          example: /api
+        HttpOnly:
+          type: boolean
+          example: true
+    LoginResponse:
+      type: object
+      properties:
+        LastLogin:
+          type: string
+          format: date-time
+          example: '2014-12-16T10:58:52.293529Z'
+        UserDetails:
+          $ref: '#/components/schemas/UserDetails'
+    UserDetails:
+      type: object
+      properties:
+        ContactID:
+          type: integer
+          example: 674
+        AgentID:
+          type: integer
+          example: 109364
+        FirstName:
+          type: string
+          example: UAT
+        LastName:
+          type: string
+          example: APIUser
+        Email:
+          type: string
+          format: email
+          example: uat.apiuser@company.com
+        JobTitle:
+          type: string
+          example: Software Application
+        ContactNumber:
+          type: string
+          example: '+91889999999'
+        IsActivated:
+          type: boolean
+        OperatedBy:
+          type: string
+          nullable: true
+        Permissions:
+          type: array
+          items:
+            type: string
+    CarrierListResponse:
+      type: array
+      items:
+        type: string
+    ErrorMessageResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid authentication token
+    SimpleError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: No Events Returned
+    BatchPostResponse:
+      type: object
+      properties:
+        summary:
+          $ref: '#/components/schemas/BatchPostSummary'
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/FailedBatchItem'
+    BatchPostSummary:
+      type: object
+      properties:
+        created:
+          type: integer
+          example: 2
+        modified:
+          type: integer
+          example: 0
+        failed:
+          type: integer
+          example: 0
+    FailedBatchItem:
+      type: object
+      properties:
+        Query:
+          type: object
+          additionalProperties: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      properties:
+        property:
+          type: string
+        message:
+          type: string
+        schema:
+          type: object
+          additionalProperties: true
+        instance:
+          type: object
+          nullable: true
+          additionalProperties: true
+        stack:
+          type: string
+    UatBatchPostRequest:
+      type: object
+      required:
+      - Queries
+      properties:
+        Queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/UatBatchQueryEnvelope'
+      example:
+        Queries:
+        - Query:
+            SearchClass: Air
+            SearchKey: awbno
+            SearchValue: 01614800601
+            UpdateUntil: '2018-07-23T00:00:00.000Z'
+            Reference: Optional User Supplied Reference
+        - Query:
+            SearchClass: Air
+            SearchKey: awbno
+            SearchValue: '61522188202'
+            UpdateUntil: '2018-07-23T00:00:00.000Z'
+            Reference: Optional User Supplied Reference
+    UatBatchQueryEnvelope:
+      type: object
+      required:
+      - Query
+      properties:
+        Query:
+          $ref: '#/components/schemas/UatBatchQuery'
+    UatBatchQuery:
+      type: object
+      required:
+      - SearchKey
+      - SearchValue
+      - UpdateUntil
+      properties:
+        CreatedDate:
+          type: string
+          format: date-time
+          nullable: true
+        SearchClass:
+          type: string
+          enum:
+          - Air
+          default: Air
+        SearchKey:
+          type: string
+          enum:
+          - awbno
+        SearchValue:
+          type: string
+          pattern: ^[0-9]{11}$
+          description: Eleven-digit AWB number.
+        UpdateUntil:
+          type: string
+          format: date-time
+          description: Maximum 15 days from creation.
+        Reference:
+          type: string
+          nullable: true
+          description: User supplied reference such as an internal order or PO number.
+    UatBatchGetResponse:
+      type: object
+      properties:
+        Queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/UatTrackingRecord'
+      example:
+        Queries:
+        - Query:
+            Carrier: United Cargo
+            SearchKey: awbno
+            SearchValue: 016-44480586
+            meta:
+              agentid: '200991'
+              listName: ''
+              queryID: awbno=016-44480586
+              lastModified: null
+              CreatedDate: '2019-06-11T09:39:40.467Z'
+              lastCheck: null
+            UpdateUntil: '2019-06-14T00:00:00Z'
+            SearchClass: Air
+            Reference: Optional User Supplied Reference
+            WebhookURL: ''
+          Results:
+            LastChanged: '2019-06-11T09:39:50.467Z'
+            Status: Fetched
+            Data:
+              AirlineName: United Cargo
+              AirlinePrefix: '016'
+              AirlineCodeIATA: UA
+              AwbNumber: '44480586'
+              Statuses: []
+              RoutingDetails: []
+              meta:
+                lastFetch: null
+                data_src: null
+                queryID: null
+                v: null
+                lastChanged: null
+                NextEventDate: null
+                IsDelivered: true
+    TrackingQueryMeta:
+      type: object
+      additionalProperties: true
+      properties:
+        agentid:
+          type: string
+        listName:
+          type: string
+        queryID:
+          type: string
+        lastModified:
+          nullable: true
+        CreatedDate:
+          type: string
+          format: date-time
+          nullable: true
+        lastCheck:
+          type: string
+          format: date-time
+          nullable: true
+    UatTrackingRecord:
+      type: object
+      properties:
+        Query:
+          $ref: '#/components/schemas/UatTrackedQuery'
+        Results:
+          $ref: '#/components/schemas/UatTrackingResults'
+    UatTrackedQuery:
+      type: object
+      properties:
+        Carrier:
+          type: string
+        SearchKey:
+          type: string
+          enum:
+          - awbno
+        SearchValue:
+          type: string
+        meta:
+          $ref: '#/components/schemas/TrackingQueryMeta'
+        UpdateUntil:
+          type: string
+          format: date-time
+        SearchClass:
+          type: string
+          enum:
+          - Air
+        Reference:
+          type: string
+          nullable: true
+        WebhookURL:
+          type: string
+          nullable: true
+    TrackingResultsBase:
+      type: object
+      properties:
+        LastChanged:
+          type: string
+          format: date-time
+        Status:
+          type: string
+          description: Usually `Fetched`, `Pending`, or `Error`.
+    UatTrackingResults:
+      allOf:
+      - $ref: '#/components/schemas/TrackingResultsBase'
+      - type: object
+        properties:
+          Data:
+            $ref: '#/components/schemas/UatTrackingData'
+    UatTrackingData:
+      type: object
+      properties:
+        AirlinePrefix:
+          type: string
+          example: '016'
+        AwbNumber:
+          type: string
+          example: '44480586'
+        AirlineName:
+          type: string
+          example: United Cargo
+        AirlineCodeIATA:
+          type: string
+          nullable: true
+          example: UA
+        Statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/UatStatusBlock'
+        RoutingDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UatRoutingDetail'
+        meta:
+          type: object
+          additionalProperties: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleError'
+    UatStatusBlock:
+      type: object
+      properties:
+        AirportCode:
+          type: string
+          nullable: true
+          example: PVG
+        Details:
+          type: array
+          items:
+            $ref: '#/components/schemas/UatStatusDetail'
+    UatStatusDetail:
+      type: object
+      properties:
+        Name:
+          type: string
+        Code:
+          type: string
+          nullable: true
+        Description:
+          type: string
+          nullable: true
+        FlightNumber:
+          type: string
+          nullable: true
+        StatusDateTime:
+          type: string
+          format: date-time
+          nullable: true
+        StatusDateTimeLocal:
+          type: string
+          nullable: true
+          description: Local datetime in `yyyy-MM-ddThh:mm:ss`.
+        StatusDateTime_EventStatus:
+          type: string
+          nullable: true
+          description: Event status such as `Completed` or `Planned`.
+        NumberOfPieces:
+          oneOf:
+          - type: integer
+          - type: string
+          nullable: true
+        Location:
+          type: string
+          nullable: true
+        Weight:
+          $ref: '#/components/schemas/Measure'
+        PortOfArrival:
+          $ref: '#/components/schemas/CodeName'
+        PortOfDeparture:
+          $ref: '#/components/schemas/CodeName'
+        DepartureInfo:
+          $ref: '#/components/schemas/UatDateInfo'
+        ArrivalInfo:
+          $ref: '#/components/schemas/UatDateInfo'
+        ReceivedStatus:
+          $ref: '#/components/schemas/UatReceivedStatus'
+        ULD:
+          type: array
+          items:
+            $ref: '#/components/schemas/UldItem'
+        OtherControlInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherControlInfoItem'
+        ReferenceNumber:
+          type: string
+          nullable: true
+        ExtraField1:
+          type: string
+          nullable: true
+        ExtraField2:
+          type: string
+          nullable: true
+        ExtraField3:
+          type: string
+          nullable: true
+    UatDateInfo:
+      type: object
+      properties:
+        Type:
+          type: string
+          nullable: true
+          description: Time classification such as Actual Time, Estimated Time, or
+            Planned Time.
+        DateTime:
+          type: string
+          format: date-time
+          nullable: true
+        DateTimeLocal:
+          type: string
+          nullable: true
+        DateTime_EventStatus:
+          type: string
+          nullable: true
+    UatReceivedStatus:
+      type: object
+      properties:
+        Received:
+          type: string
+          nullable: true
+        Carrier:
+          type: string
+          nullable: true
+        From:
+          type: string
+          nullable: true
+        Volume:
+          $ref: '#/components/schemas/Measure'
+        Density:
+          type: object
+          properties:
+            Indicator:
+              type: string
+              nullable: true
+            Group:
+              type: string
+              nullable: true
+    UldItem:
+      type: object
+      properties:
+        Number:
+          type: string
+          nullable: true
+    OtherControlInfoItem:
+      type: object
+      properties:
+        Country:
+          type: string
+          nullable: true
+        Information:
+          type: string
+          nullable: true
+        Description:
+          type: string
+          nullable: true
+    UatRoutingDetail:
+      type: object
+      properties:
+        Origin:
+          $ref: '#/components/schemas/UatRoutingPoint'
+        Destination:
+          $ref: '#/components/schemas/UatRoutingDestination'
+        Transport:
+          $ref: '#/components/schemas/UatTransport'
+        Cargo:
+          type: object
+          properties:
+            Weight:
+              $ref: '#/components/schemas/Measure'
+            NumberOfPieces:
+              oneOf:
+              - type: integer
+              - type: string
+              nullable: true
+    UatRoutingPoint:
+      type: object
+      properties:
+        Code:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true
+        DepartureTime:
+          type: string
+          format: date-time
+          nullable: true
+        DepartureTimeLocal:
+          type: string
+          nullable: true
+        Status:
+          type: string
+          nullable: true
+    UatRoutingDestination:
+      type: object
+      properties:
+        Code:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true
+        ArrivalTime:
+          type: string
+          format: date-time
+          nullable: true
+        ArrivalTimeLocal:
+          type: string
+          nullable: true
+        Status:
+          type: string
+          nullable: true
+    UatTransport:
+      type: object
+      properties:
+        Class:
+          type: string
+          nullable: true
+        TransportNumber:
+          type: string
+          nullable: true
+        Carrier:
+          type: object
+          properties:
+            Code:
+              type: string
+              nullable: true
+            Name:
+              type: string
+              nullable: true
+            Prefix:
+              type: string
+              nullable: true
+    Measure:
+      type: object
+      properties:
+        UOM:
+          type: string
+          nullable: true
+        Value:
+          type: number
+          format: double
+          nullable: true
+    CodeName:
+      type: object
+      properties:
+        Code:
+          type: string
+          nullable: true
+        Name:
+          type: string
+          nullable: true

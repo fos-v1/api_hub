@@ -11,6 +11,8 @@ This folder contains a Swagger UI portal for the Freightoscope and FOS Connect A
 - `specs/financial-documents.yaml`: Freightoscope outbound financial document APIs for invoice, credit note, debit note, and bill posting
 - `specs/fos-connect.yaml`: FOS Connect APIs copied from the existing project spec and sanitized for documentation use
 - `specs/shipment.yaml`: Freightoscope shipment APIs with GET and POST endpoints for air, sea, and inland shipments
+- `specs/universal-air-tracking.yaml`: WIN Universal Air Tracking batch list APIs
+- `specs/universal-sea-tracking.yaml`: WIN Universal Sea Tracking batch list APIs
 
 ## Local preview
 
