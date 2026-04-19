@@ -2,14 +2,14 @@ openapi: 3.0.3
 info:
   title: Universal Sea Tracking
   version: 1.0.0
-  description: WIN Universal Sea Tracking batch list APIs based on the Universal Container
+  description: Freightoscope Universal Sea Tracking batch list APIs based on the Universal Container
     Tracking (UCT) customer guide, including login, carrier lookup, and batch list
     POST, GET, and DELETE operations.
 servers:
-- url: https://www.winwebconnect.com
-  description: WIN production environment
-- url: http://integration.winwebconnect.com
-  description: WIN integration environment from the customer guides
+- url: https://fms-live-api.azurewebsites.net/
+  description: Freightoscope production environment
+- url: https://fms-test-api.azurewebsites.net/
+  description: Freightoscope TEST environment
 tags:
 - name: Authentication
   description: Login endpoint used before calling tracking APIs
@@ -20,9 +20,9 @@ paths:
     post:
       tags:
       - Authentication
-      summary: Login and start a WIN session
+      summary: Login and start a Freightoscope session
       operationId: loginUniversalTracking
-      description: 'Authenticates with WIN and starts a session. Use the returned
+      description: 'Authenticates with Freightoscope and starts a session. Use the returned
         `authToken` value from the login response as the token for all other
         Universal Sea Tracking API calls.
 
@@ -193,9 +193,9 @@ paths:
       - Universal Sea Tracking
       summary: Get UCT tracking updates
       operationId: getUniversalSeaTrackingBatchList
-      description: 'Returns sea tracking updates after the provided timestamp. WIN
+      description: 'Returns sea tracking updates after the provided timestamp. Freightoscope
         recommends polling this endpoint about every 2 hours. If `since` is omitted,
-        WIN defaults it to roughly the previous 24 hours. To fetch queries that have
+        Freightoscope defaults it to roughly the previous 24 hours. To fetch queries that have
         no tracking updates, call the same endpoint with `nodata=true`.
 
         '
@@ -294,7 +294,7 @@ components:
       name: AgentId
       in: path
       required: true
-      description: WIN agent identifier.
+      description: Freightoscope agent identifier.
       schema:
         type: integer
         example: 109364
